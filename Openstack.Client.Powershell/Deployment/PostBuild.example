@@ -1,0 +1,13 @@
+﻿
+=====================================================================================================================
+ACTION REQUIRED : Change the DocPath Variable below to reflect your Personal Documents Folder..
+=====================================================================================================================
+set DocPath=C:\Users\Travis\Documents
+
+ md %DocPath%\WindowsPowershell\
+ md %DocPath%\OS\
+ md %DocPath%\OS\
+
+copy ..\..\.\Deployment\DevProfile.ps1                                %DocPath%\WindowsPowershell\Microsoft.PowerShell_profile.ps1
+copy ..\..\.\Deployment\CLI.config                                    %DocPath%\OS\CLI.config
+copy ..\..\.\Deployment\Openstack.Client.Powershell.dll-Help.xml      %DocPath%\OS\Openstack.Client.Powershell.dll-Help.xml

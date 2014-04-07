@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Openstack.Client.Powershell.Deployment", "Openstack.Client.Powershell.Deployment.vdproj", "{15B40627-0EBD-4D70-A69C-F248EBD1BD36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Openstack.Client.Powershell", "..\Openstack.Client.Powershell\Openstack.Client.Powershell.csproj", "{32BAC168-2EC8-4074-9E6D-8C13460DCFAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Openstack.Common", "..\..\OpenStack-API\Openstack.Common\Openstack.Common.csproj", "{F6AF0191-F236-4C26-8C93-30D5F4D8000F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Openstack.Objects", "..\..\OpenStack-API\Openstack.Objects\Openstack.Objects.csproj", "{BDCDCBF5-3467-461E-8307-E1E4E19F6532}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		TransformTool Build|Any CPU = TransformTool Build|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{15B40627-0EBD-4D70-A69C-F248EBD1BD36}.Debug|Any CPU.ActiveCfg = Debug
+		{15B40627-0EBD-4D70-A69C-F248EBD1BD36}.Release|Any CPU.ActiveCfg = Release
+		{15B40627-0EBD-4D70-A69C-F248EBD1BD36}.Release|Any CPU.Build.0 = Release
+		{15B40627-0EBD-4D70-A69C-F248EBD1BD36}.TransformTool Build|Any CPU.ActiveCfg = Release
+		{15B40627-0EBD-4D70-A69C-F248EBD1BD36}.TransformTool Build|Any CPU.Build.0 = Release
+		{32BAC168-2EC8-4074-9E6D-8C13460DCFAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32BAC168-2EC8-4074-9E6D-8C13460DCFAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32BAC168-2EC8-4074-9E6D-8C13460DCFAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32BAC168-2EC8-4074-9E6D-8C13460DCFAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32BAC168-2EC8-4074-9E6D-8C13460DCFAD}.TransformTool Build|Any CPU.ActiveCfg = TransformTool Build|Any CPU
+		{32BAC168-2EC8-4074-9E6D-8C13460DCFAD}.TransformTool Build|Any CPU.Build.0 = TransformTool Build|Any CPU
+		{F6AF0191-F236-4C26-8C93-30D5F4D8000F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6AF0191-F236-4C26-8C93-30D5F4D8000F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6AF0191-F236-4C26-8C93-30D5F4D8000F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6AF0191-F236-4C26-8C93-30D5F4D8000F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6AF0191-F236-4C26-8C93-30D5F4D8000F}.TransformTool Build|Any CPU.ActiveCfg = Release|Any CPU
+		{F6AF0191-F236-4C26-8C93-30D5F4D8000F}.TransformTool Build|Any CPU.Build.0 = Release|Any CPU
+		{BDCDCBF5-3467-461E-8307-E1E4E19F6532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDCDCBF5-3467-461E-8307-E1E4E19F6532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDCDCBF5-3467-461E-8307-E1E4E19F6532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDCDCBF5-3467-461E-8307-E1E4E19F6532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDCDCBF5-3467-461E-8307-E1E4E19F6532}.TransformTool Build|Any CPU.ActiveCfg = Release|Any CPU
+		{BDCDCBF5-3467-461E-8307-E1E4E19F6532}.TransformTool Build|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

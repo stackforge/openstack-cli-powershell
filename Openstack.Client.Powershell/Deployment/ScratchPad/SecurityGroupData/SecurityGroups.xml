@@ -1,0 +1,85 @@
+﻿<security_groups xmlns="http://docs.openstack.org/compute/api/v1.1">
+  <security_group id="222" name="default" tenant_id="58196046451129">
+    <rules>
+      <rule id="325" parent_group_id="222">
+        <from_port>
+          22
+        </from_port>
+        <group/>
+        <ip_protocol>
+          tcp
+        </ip_protocol>
+        <to_port>
+          22
+        </to_port>
+        <ip_range>
+          <cidr>
+            0.0.0.0/0
+          </cidr>
+        </ip_range>
+      </rule>
+      <rule id="326" parent_group_id="222">
+        <from_port>
+          -1
+        </from_port>
+        <group/>
+        <ip_protocol>
+          icmp
+        </ip_protocol>
+        <to_port>
+          -1
+        </to_port>
+        <ip_range>
+          <cidr>
+            0.0.0.0/0
+          </cidr>
+        </ip_range>
+      </rule>
+    </rules>
+    <description>
+      default
+    </description>
+  </security_group>
+  <security_group id="112" name="defaul2t" tenant_id="58196046451129">
+    <rules>
+      <rule id="325" parent_group_id="222">
+        <from_port>
+          11
+        </from_port>
+        <group/>
+        <ip_protocol>
+          tcp
+        </ip_protocol>
+        <to_port>
+         33
+        </to_port>
+        <ip_range>
+          <cidr>
+            0.0.0.0/0
+          </cidr>
+        </ip_range>
+      </rule>
+      <rule id="326" parent_group_id="222">
+        <from_port>
+          -1
+        </from_port>
+        <group/>
+        <ip_protocol>
+          icmp
+        </ip_protocol>
+        <to_port>
+          -1
+        </to_port>
+        <ip_range>
+          <cidr>
+            0.0.0.0/0
+          </cidr>
+        </ip_range>
+      </rule>
+    </rules>
+    <description>
+      default
+    </description>
+  </security_group>
+</security_groups>
+
