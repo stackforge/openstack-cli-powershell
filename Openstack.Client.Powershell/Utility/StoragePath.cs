@@ -18,14 +18,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.IO;
-using Openstack;
-using Openstack.Client.Powershell.Utility;
+using OpenStack;
+using OpenStack.Client.Powershell.Utility;
 using System.Collections.ObjectModel;
-using Openstack.Common;
+using OpenStack.Common;
 using System.Diagnostics.Contracts;
 using System.Web;
 
-namespace Openstack.Client.Powershell.Utility
+namespace OpenStack.Client.Powershell.Utility
 {
     public class StoragePath
     {

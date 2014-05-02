@@ -19,16 +19,17 @@ using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Provider;
 using System.Collections.ObjectModel;
-using Openstack.Storage;
-using Openstack.Client.Powershell.Utility;
-using Openstack.Client.Powershell.Providers.Common;
+using OpenStack.Storage;
+using OpenStack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Providers.Common;
 using System.Management.Automation.Runspaces;
-using Openstack;
+using OpenStack;
 using System.Threading.Tasks;
 using System.Threading;
-using Openstack.Client.Powershell.Providers.ObjectStorage;
+using OpenStack.Client.Powershell.Providers.ObjectStorage;
 
-namespace Openstack.Client.Powershell.Providers.Storage 
+
+namespace OpenStack.Client.Powershell.Providers.Storage 
 {
     [CmdletProvider("Object Storage", ProviderCapabilities.ExpandWildcards)]
     public class HPOSNavigationProvider : BaseNavigationCmdletProvider
@@ -49,7 +50,7 @@ namespace Openstack.Client.Powershell.Providers.Storage
         {
             get 
             {
-                IOpenstackClient client = (IOpenstackClient)this.SessionState.PSVariable.GetValue("Client", null);
+                IOpenStackClient client = (IOpenStackClient)this.SessionState.PSVariable.GetValue("CoreClient", null);
                 return client.CreateServiceClient<IStorageServiceClient>();
             }
 
@@ -65,6 +66,22 @@ namespace Openstack.Client.Powershell.Providers.Storage
         protected override void ClearItem(string path)
         {
             base.ClearItem(path);
+        }
+//==================================================================================================
+/// <summary>
+/// 
+/// </summary>
+//==================================================================================================
+        private string StorageServiceURL
+        {
+            get
+            {
+                if (this.Drive == null || this.Drive.SharePath == null)
+                    return this.Context.ServiceCatalog.GetPublicEndpoint("Object Storage", "region-a.geo-1").ToString();
+                    //return this.Context.ServiceCatalog.GetPublicEndpoint("object-store", null).ToString();             //.GetService("object-store").Url;
+                else
+                    return this.Drive.SharePath;
+            }
         }
 //==================================================================================================
 /// <summary>
@@ -104,13 +121,13 @@ namespace Openstack.Client.Powershell.Providers.Storage
             // For every storageContainer that the User has access to, create a Drive that he can mount within Powershell..
 
             try
-            {
+            {               
                 if (storageContainers.Count() > 0)
                 {
                     foreach (StorageContainer storageContainer in storageContainers)
                     {
                         PSDriveInfo driveInfo             = new PSDriveInfo(storageContainer.Name, providerInfo, "/", "Root folder for your storageContainer", null);
-                        parameters.Settings               = this.Settings;  
+                        parameters.Settings               = this.Settings;
                         OpenStackPSDriveInfo kvsDriveInfo = new OpenStackPSDriveInfo(driveInfo, parameters, this.Context, this.StorageServiceURL);
                         //kvsDriveInfo.SharePath            = storageContainer.SharePath;
                         drives.Add(kvsDriveInfo);
@@ -155,9 +172,9 @@ namespace Openstack.Client.Powershell.Providers.Storage
         {
             WriteDebug("No Storage Containers found, initializing defaults.");
             PSDriveInfo driveInfo = new PSDriveInfo("OS-Init", this.ProviderInfo, "/", "Root folder for your Container", null);
-            
+          
             return new Collection<PSDriveInfo>   
-                        {   
+                        {                      
                         new OpenStackPSDriveInfo(driveInfo, parameters, this.Context, this.StorageServiceURL)   
                         };
         }
@@ -169,6 +186,8 @@ namespace Openstack.Client.Powershell.Providers.Storage
 //==================================================================================================
         protected override System.Collections.ObjectModel.Collection<PSDriveInfo> InitializeDefaultDrives()
         {
+           Thread.Sleep(10000);
+
             this.InitializeSession();
 
             if (this.Context.ServiceCatalog.Exists(this.ProviderInfo.Name))
@@ -257,9 +276,9 @@ namespace Openstack.Client.Powershell.Providers.Storage
 /// <param name="path"></param>
 /// <returns></returns>
 //==================================================================================================
-        private IEnumerable<StorageItemModelView> GetStorageObjects(string path)
+        private IEnumerable<StorageItemViewModel> GetStorageObjects(string path)
         {
-            List<StorageItemModelView> modelViewItems = new List<StorageItemModelView>();
+            List<StorageItemViewModel> modelViewItems = new List<StorageItemViewModel>();
             Task<StorageFolder> listStorageObjectTask;
             string folderName = null;
 
@@ -267,7 +286,7 @@ namespace Openstack.Client.Powershell.Providers.Storage
                 path = path + @"\";
 
             StoragePath storagePath      = this.CreateStoragePath(path);
-            IStorageServiceClient client = this.Client.CreateServiceClient<IStorageServiceClient>();                     
+            var client = this.Client.CreateServiceClient<IStorageServiceClient>();                     
             
             if (path == "\\") {
                 folderName = "/";             
@@ -280,7 +299,7 @@ namespace Openstack.Client.Powershell.Providers.Storage
            listStorageObjectTask.Wait();
            foreach (StorageItem item in listStorageObjectTask.Result.Objects.Union<StorageItem>(listStorageObjectTask.Result.Folders))
            {
-               StorageItemModelView modelView = new StorageItemModelView(item);
+               StorageItemViewModel modelView = new StorageItemViewModel(item);
                modelViewItems.Add(modelView);
            }
            return modelViewItems;
@@ -290,7 +309,7 @@ namespace Openstack.Client.Powershell.Providers.Storage
 /// 
 /// </summary>
 //==================================================================================================
-        private void WriteData(IEnumerable<StorageItemModelView> storageItemViewModel, string path, WildcardPattern pattern = null)
+        private void WriteData(IEnumerable<StorageItemViewModel> storageItemViewModel, string path, WildcardPattern pattern = null)
         {
             FolderStatistics statistics = new FolderStatistics();
             bool doesExist              = false;
@@ -305,7 +324,7 @@ namespace Openstack.Client.Powershell.Providers.Storage
 
             //List<StorageItem> folders = storageObjects.Where(so => so.Name.EndsWith(@"\")).ToList<StorageItem>(); 
 
-            List<StorageItemModelView> folders = storageItemViewModel.Where(so => so.Type == "Folder").ToList<StorageItemModelView>(); 
+            List<StorageItemViewModel> folders = storageItemViewModel.Where(so => so.Type == "Folder").ToList<StorageItemViewModel>(); 
 
            // List<StorageObject> folders = storageObjects.Where(so => so.StorageObjectType == StorageObjectType.Folder).ToList<StorageObject>(); 
 
@@ -334,7 +353,7 @@ namespace Openstack.Client.Powershell.Providers.Storage
 /// Writes out the files represented as StorageObjects for the supplied path.
 /// </summary>
 //==================================================================================================
-        private FolderStatistics WriteFiles(IEnumerable<StorageItemModelView> storageObjects, string path)
+        private FolderStatistics WriteFiles(IEnumerable<StorageItemViewModel> storageObjects, string path)
         {            
             FolderStatistics statistics = new FolderStatistics();           
 
@@ -358,13 +377,13 @@ namespace Openstack.Client.Powershell.Providers.Storage
 /// Writes out a list of supplied Folders and returns stats on them as well.
 /// </summary>
 //==================================================================================================
-        private void WriteFolders(List<StorageItemModelView> folders, ref FolderStatistics statistics)
+        private void WriteFolders(List<StorageItemViewModel> folders, ref FolderStatistics statistics)
         {
             if (folders != null)
             {
                 // Write out each folder we find in the current directory..
 
-                foreach (StorageItemModelView obj in folders)
+                foreach (StorageItemViewModel obj in folders)
                 {
                     string fixedString   = obj.Name.TrimEnd('/');
                     string[] folderNames = fixedString.Split('/');
@@ -542,7 +561,7 @@ namespace Openstack.Client.Powershell.Providers.Storage
             if (this.CheckDefaultDrive(true)) return;
 
             this.WriteHeader();
-            this.WriteData(this.GetStorageObjects(path).ToList<StorageItemModelView>(), path);            
+            this.WriteData(this.GetStorageObjects(path).ToList<StorageItemViewModel>(), path);            
         }
 //==================================================================================================
 /// <summary>
@@ -663,11 +682,11 @@ namespace Openstack.Client.Powershell.Providers.Storage
 
             if (this.CheckDefaultDrive(true)) return;
             this.WriteHeader();
-            IEnumerable<StorageItemModelView> storageObjects = this.GetStorageObjects(path);
+            IEnumerable<StorageItemViewModel> storageObjects = this.GetStorageObjects(path);
 
 
 
-            this.WriteData(storageObjects.ToList<StorageItemModelView>(), path);           
+            this.WriteData(storageObjects.ToList<StorageItemViewModel>(), path);           
         }
 //==================================================================================================
 /// <summary>
@@ -693,22 +712,6 @@ namespace Openstack.Client.Powershell.Providers.Storage
         }
         #endregion
         #region Properties   
-//==================================================================================================
-/// <summary>
-/// 
-/// </summary>
-//==================================================================================================
-        private string StorageServiceURL
-        {
-            get
-            {
-                return this.StorageClient.GetPublicEndpoint().AbsoluteUri;
-                //if (this.Drive.SharePath == null)
-                //    return this.Context.ServiceCatalog.GetService("object-store").Url;
-                //else
-                //    return this.Drive.SharePath;
-            }
-        }
 //==================================================================================================
 /// <summary>
 /// 

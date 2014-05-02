@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\..\Documents\WindowsPowerShell\Modules\Openstack\Openstack-Core\</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -62,12 +62,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AWSSDK.2.0.11.0\lib\net45\AWSSDK.dll</HintPath>
     </Reference>
-    <Reference Include="BouncyCastle.Crypto, Version=1.7.4137.9688, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -95,9 +92,19 @@
   <ItemGroup>
     <Compile Include="BaseNavigationCmdletProvider.cs" />
     <Compile Include="Cmdlets\BasePSCmdlet.cs" />
+    <Compile Include="Cmdlets\Common\BaseAuthenticationCmdlet.cs" />
     <Compile Include="Cmdlets\Common\BasePSCmdlet.cs" />
+    <Compile Include="Cmdlets\Common\GetCatalogCmdlet.cs" />
+    <Compile Include="Cmdlets\Common\GetConfigCmdlet.cs" />
+    <Compile Include="Cmdlets\Common\GetVersionCmdlet.cs" />
+    <Compile Include="Cmdlets\Common\GetZoneCmdlet.cs" />
+    <Compile Include="Cmdlets\Common\GetZonesCmdlet.cs" />
+    <Compile Include="Cmdlets\Common\SetConfigCmdlet.cs" />
+    <Compile Include="Utility\AccountCapabilities.cs" />
+    <Compile Include="Utility\CredentialElement.cs" />
     <Compile Include="Cmdlets\Common\GetServiceProvidersCmdlet.cs" />
-    <Compile Include="Cmdlets\Common\NewServiceProvider.cs" />
+    <Compile Include="Cmdlets\Common\NewServiceProviderCmdlet.cs" />
+    <Compile Include="Cmdlets\Common\SetServiceProviderCmdlet.cs" />
     <Compile Include="Cmdlets\ObjectStorage\Objects\CopyItemCmdlet.cs" />
     <Compile Include="Cmdlets\ObjectStorage\Objects\GetURICmdlet.cs" />
     <Compile Include="Cmdlets\ObjectStorage\Objects\RemoveItemCmdlet.cs" />
@@ -109,25 +116,31 @@
     <Compile Include="Providers\ObjectStorage\HPOSNavigationProvider.cs" />
     <Compile Include="Utility\Context.cs" />
     <Compile Include="Utility\Enums.cs" />
+    <Compile Include="Utility\ExtensionManager.cs" />
+    <Compile Include="Utility\OpenstackCoreRegistrationManager.cs" />
+    <Compile Include="Utility\RegistrationManager.cs" />
+    <Compile Include="Utility\RegistrationResponse.cs" />
+    <Compile Include="Utility\SecureStringHelper.cs" />
     <Compile Include="Utility\ServiceProvider.cs" />
+    <Compile Include="Utility\ConfigurationManager.cs" />
     <Compile Include="Utility\Settings.cs" />
     <Compile Include="Utility\StoragePath.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Deployment\CLI.config">
+    <None Include="Deployment\Openstack.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Deployment\DevProfile.ps1" />
     <None Include="Deployment\PostBuild.bat" />
     <None Include="Deployment\ScratchPad\app.config" />
-    <None Include="Deployment\CLI.config.example">
+    <None Include="Deployment\Openstack.config.example">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Deployment\DevProfile.ps1.example" />
-    <None Include="Deployment\OpenstackShell.format.ps1xml">
+    <None Include="Deployment\Openstack.format.ps1xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -175,7 +188,9 @@
     <Content Include="Deployment\CredentialList.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Deployment\Openstack.Client.Powershell.dll-Help.xml" />
+    <Content Include="Deployment\Openstack.Client.Powershell.dll-Help.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Deployment\readme.txt" />
     <Content Include="Deployment\ReleaseManifest.xml" />
     <Content Include="Deployment\ScratchPad\SecurityGroupData\SecurityGroupTest.xml" />
@@ -187,7 +202,7 @@
     <Content Include="Deployment\ScratchPad\ServerData\Server1.xml" />
     <Content Include="Deployment\ScratchPad\ServerData\Servers.xml" />
     <Content Include="License.txt" />
-    <None Include="Deployment\CLIManifest.psd1">
+    <None Include="Deployment\Openstack.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Deployment\ReleaseNotes.xml">
@@ -199,10 +214,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\openstack-sdk-dotnet\Openstack\Openstack.Common\Openstack.Common.csproj">
-      <Project>{c53d669c-cdf1-4157-aec1-bd167f655b2b}</Project>
-      <Name>Openstack.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\openstack-sdk-dotnet\Openstack\Openstack\Openstack.csproj">
       <Project>{b2c92371-b62b-45a2-adeb-edebefa3a75c}</Project>
       <Name>Openstack</Name>
@@ -220,11 +231,17 @@
 Echo Executing Post-Build Scripts
 Echo =====================
 
-copy ..\..\.\Deployment\CLIManifest.psd1                                                $(ProjectDir)\bin\release\CLIManifest.psd1
-copy ..\..\.\Deployment\OpenstackShell.format.ps1xml                         $(ProjectDir)\bin\release\OpenstackShell.format.ps1xml
-copy ..\..\.\Deployment\Openstack.Client.Powershell.dll-help.xml      $(ProjectDir)\bin\release\Openstack.Client.Powershell.dll-help.xml
 
-call  $(ProjectDir)Deployment\PostBuild.bat</PostBuildEvent>
+copy C:\Users\tplummer\Source\Repos\openstack-cli-powershell\Openstack.Client.Powershell\Deployment\*.*   C:\Users\tplummer\Documents\WindowsPowerShell\Modules\Openstack\Openstack-Core
+copy C:\Users\tplummer\Source\Repos\openstack-cli-powershell\Openstack.Client.Powershell\Deployment\DevProfile.ps1  C:\Users\tplummer\Documents\WindowsPowerShell\Microsoft.Powershell_profile.ps1
+copy C:\Users\tplummer\Source\Repos\openstack-cli-powershell\Openstack.Client.Powershell\Deployment\Openstack.config  C:\Users\tplummer\Documents\OS\Openstack.config
+
+
+
+
+
+
+</PostBuildEvent>
   </PropertyGroup>
   <!--<Import Project="$(ProjectDir)\Deployment\PostBuild.targets" Condition="Exists('$(ProjectDir)\Deployment\PostBuild.targets')" />-->
   <!---->

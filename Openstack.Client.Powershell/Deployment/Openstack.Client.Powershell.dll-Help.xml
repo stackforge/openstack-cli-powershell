@@ -847,7 +847,7 @@
           <maml:para>Description</maml:para>
           <maml:para>-----------</maml:para>
           <maml:para>
-            Resets the current session settings to those defined within the default config file (CLI.config)
+            Resets the current session settings to those defined within the default config file (OpenStack.config)
           </maml:para>
           <maml:para></maml:para>
           <maml:para></maml:para>
@@ -898,7 +898,7 @@
     </command:details>
     <maml:description>
       <maml:para>
-        When you issue this command the URI is also pasted to the Windows clipboard for your convenience. If you want to disable this behavior simply set the CLI.config option entitled PasteGetURIResultsToClipboard to false.
+        When you issue this command the URI is also pasted to the Windows clipboard for your convenience. If you want to disable this behavior simply set the OpenStack.config option entitled PasteGetURIResultsToClipboard to false.
       </maml:para>
     </maml:description>
     <!-- Cmdlet syntax section-->

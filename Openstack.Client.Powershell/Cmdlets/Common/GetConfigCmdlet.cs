@@ -16,11 +16,11 @@ limitations under the License.
 using System;
 using System.Management.Automation;
 using System.Collections;
-using Openstack.Client.Powershell.Cmdlets.Common;
+using OpenStack.Client.Powershell.Cmdlets.Common;
 using System.IO;
 using System.Xml;
 
-namespace Openstack.Client.Powershell.Cmdlets.Common
+namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
     [Cmdlet(VerbsCommon.Get, "Config", SupportsShouldProcess = true)]
     public class GetConfigCmdlet : BasePSCmdlet
@@ -57,7 +57,7 @@ namespace Openstack.Client.Powershell.Cmdlets.Common
             this.WriteObject("Configuration File located at " + configFilePath);
             WriteObject("");
 
-            foreach (DictionaryEntry setting in this.Settings)
+            foreach (DictionaryEntry setting in this.Context.Settings)
             {              
                 if (((string)setting.Key) == "SecretKey" || ((string)setting.Key)== "AccessKey")
                 {

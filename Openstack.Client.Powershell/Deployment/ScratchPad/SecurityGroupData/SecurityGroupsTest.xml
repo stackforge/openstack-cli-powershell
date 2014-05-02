@@ -1,6 +1,0 @@
-﻿<security_groups xmlns="http://docs.openstack.org/compute/api/v1.1">
-  <security_group id="222" name="default" tenant_id="58196046451129">
-   
-  </security_group>
-</security_groups>
-

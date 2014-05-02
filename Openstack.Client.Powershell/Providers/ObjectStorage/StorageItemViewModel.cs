@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Openstack.Storage;
+using OpenStack.Storage;
 
-namespace Openstack.Client.Powershell.Providers.ObjectStorage
+namespace OpenStack.Client.Powershell.Providers.ObjectStorage
 {
     public class StorageItemViewModel 
     {

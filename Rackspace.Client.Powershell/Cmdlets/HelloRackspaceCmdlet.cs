@@ -1,0 +1,58 @@
+﻿//* ============================================================================
+//Copyright 2014 Hewlett Packard
+
+//Licensed under the Apache License, Version 2.0 (the "License");
+//you may not use this file except in compliance with the License.
+//You may obtain a copy of the License at
+
+//    http://www.apache.org/licenses/LICENSE-2.0
+
+//Unless required by applicable law or agreed to in writing, software
+//distributed under the License is distributed on an "AS IS" BASIS,
+//WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//See the License for the specific language governing permissions and
+//limitations under the License.
+//============================================================================ */
+using System;
+using System.Management.Automation;
+using OpenStack.Client.Powershell.Cmdlets.Common;
+using OpenStack.Storage;
+
+
+namespace Rackspace.Client.Powershell.Cmdlets
+{
+    [Cmdlet("Hello", "RS", SupportsShouldProcess = true)]
+    //[RequiredServiceIdentifierAttribute(OpenStack.Objects.Domain.Admin.Services.ObjectStorage)]
+    public class HelloRackspaceCmdlet : BasePSCmdlet
+    {
+
+        //=========================================================================================
+        /// <summary>
+        /// 
+        /// </summary>
+        //=========================================================================================
+        protected override void ProcessRecord()
+        {
+            Console.WriteLine("Hello World, from Rackspace!");
+            if (this.CoreClient != null)
+            {
+                var client = this.CoreClient.CreateServiceClient<IStorageServiceClient>();
+
+
+                var connectTask = client.GetStorageAccount();
+                connectTask.Wait();
+
+                StorageAccount account = connectTask.Result;
+                int h = 8;
+
+
+                Console.WriteLine(this.Context.Settings.LocalTestDirectory);
+
+                
+
+            }
+            
+        }
+     
+    }
+}

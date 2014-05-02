@@ -16,24 +16,24 @@
 //using System;
 //using System.Text;
 //using System.Management.Automation;
-//using Openstack.Objects.DataAccess;
+//using OpenStack.Objects.DataAccess;
 //using System.IO;
-//using Openstack.Common.Properties;
+//using OpenStack.Common.Properties;
 //using System.Xml;
 //using System.Xml.Serialization;
-//using Openstack.Client.Powershell.Providers.Storage;
-//using Openstack.Objects.Domain;
-//using Openstack.Objects.Utility;
-//using Openstack.Client.Powershell.Providers.Common;
+//using OpenStack.Client.Powershell.Providers.Storage;
+//using OpenStack.Objects.Domain;
+//using OpenStack.Objects.Utility;
+//using OpenStack.Client.Powershell.Providers.Common;
 //using System.Linq;
 //using System.Collections.ObjectModel;
 //using System.Management.Automation.Host;
 
-//namespace Openstack.Client.Powershell.Cmdlets.Common
+//namespace OpenStack.Client.Powershell.Cmdlets.Common
 //{  
 //    public class BasePSCmdlet : PSCmdlet
 //    {
-//        private Openstack.Objects.DataAccess.ResponseFormat _responseFormat = ResponseFormat.none;
+//        private OpenStack.Objects.DataAccess.ResponseFormat _responseFormat = ResponseFormat.none;
 //        private BaseRepositoryFactory _repositoryFactory;
 
 //        #region Properties
@@ -142,7 +142,7 @@
 //                }
 //                catch (Exception)
 //                {
-//                    return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\CLI.config";
+//                    return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\OpenStack.config";
 //                }
 //            }
 //        }
@@ -238,7 +238,7 @@
 //            if (isAuthorized == false && foundattribute == false) return; 
 
 //            if (!isAuthorized)
-//                this.ThrowTerminatingError(new ErrorRecord(new InvalidOperationException("You're not current authorized to use this service. Please go to https://www.Openstack.com/ for more information on signing up for this service."), "aa", ErrorCategory.InvalidOperation, this));
+//                this.ThrowTerminatingError(new ErrorRecord(new InvalidOperationException("You're not current authorized to use this service. Please go to https://www.OpenStack.com/ for more information on signing up for this service."), "aa", ErrorCategory.InvalidOperation, this));
 //        }
 ////==================================================================================================
 ///// <summary>

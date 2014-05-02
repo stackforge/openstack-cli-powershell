@@ -1,4 +1,4 @@
-﻿Openstack Powershell CLI - Getting Set up to Contribute
+﻿OpenStack Powershell CLI - Getting Set up to Contribute
 
 I - Pre-requisits
   
@@ -6,7 +6,7 @@ I - Pre-requisits
 
  A. Set the Required Execution Policy
 
-    To use the Openstack CLI Software for Windows PowerShell, you must make sure that your Powershell environment is capable of executing 3rd party modules.
+    To use the OpenStack CLI Software for Windows PowerShell, you must make sure that your Powershell environment is capable of executing 3rd party modules.
     Note: If you are performing a re-installation of the software package, you can skip this step. This step is applicable only for a fresh installation.
     Open a PowerShell window as the administrator and issue the command set-executionpolicy -ExecutionPolicy Unrestricted:
 
@@ -31,27 +31,27 @@ I - Pre-requisits
 C. - Supplying your Credentials
 
 Our next step is to make sure that we supply the proper credentials when logging on to the system. If you ran the CLI after your initial
-install, you'll have noticed that you were prompted for this information. The result is stored in the CLI.config file located within the Users Personal Data Folder
+install, you'll have noticed that you were prompted for this information. The result is stored in the OpenStack.config file located within the Users Personal Data Folder
 under the OS directory. With each Build we must update that file with the version in our solution. This is so that when new config file changes are introduced, you 
 have the CLI picking them up at runtime from the expected location (instead of residing in just your project directory). Complete these steps to supply this information.
 
-1. Navigate to the Openstack.Client.Powershell project and look into the Deployment folder.
-2. Within that folder you will see a file called CLI.config.example
+1. Navigate to the OpenStack.Client.Powershell project and look into the Deployment folder.
+2. Within that folder you will see a file called OpenStack.config.example
 3. Copy the example file into the same folder but remove the .example on the filename.
-4. Open up the CLI.config file that you just created.
+4. Open up the OpenStack.config file that you just created.
 5. Find the config section entitled "IdentityServices".
 6. Within this section supply values for Username, Password, and Default Tenenat Id. All of this can be found within your account information on you providers portal.
 
-Each time that we build, this CLI.config file will be moved to the correct runtime location via Post-Build Scripts outlined in the next section.
+Each time that we build, this OpenStack.config file will be moved to the correct runtime location via Post-Build Scripts outlined in the next section.
 
 D. - Edit Post Build Scripts
 
-Within the Openstack.Client.Powershell projects Post-Build Event you'll notice that we call a PostBuild.bat file. This
+Within the OpenStack.Client.Powershell projects Post-Build Event you'll notice that we call a PostBuild.bat file. This
 batch file will move important run-time files required by the CLI to their proper locations if you decide to edit them.
-Without this, all changes to important files (like CLI.config) would go unnoticed because they would sit in our project
+Without this, all changes to important files (like OpenStack.config) would go unnoticed because they would sit in our project
 folders on disk (rather than the location the CLI expects). To create tis batch file, follow these steps.
 
-1. Navigate to the Openstack.Client.Powershell project and look into the Deployment folder.
+1. Navigate to the OpenStack.Client.Powershell project and look into the Deployment folder.
 2. Within that folder you will see a file called PostBuild.example
 3. Open up that file and copy the contents to the clipboard. 
 4. Within that same folder create a file called PostBuild.bat
@@ -66,7 +66,7 @@ Powershell loads. Here we can set up the look of the environment, issue some def
 and loading Powershell Modules. The Powershell module is where all of our CLI code resides and must get loaded by this script. 
 The only problem here is that the path to that module is specific to your machine. To address this follow these steps
 
- 1. Open up the DevProfile.ps1.example file within the Solutions [Openstack.Client.Powershell]\Deployment folder.
+ 1. Open up the DevProfile.ps1.example file within the Solutions [OpenStack.Client.Powershell]\Deployment folder.
  2. Copy the contents of this file into a new text file called DevProfile.ps1
  3. Search this document for "ACTION REQUIRED" and follow the instructions given.   
  
@@ -122,5 +122,5 @@ III. Testing
        ->  Folder2 (contains files)
                 -> Folder3 (contains NO files)
 
-   Note : Go to the Testing section in the CLI.Config file. Make sure that LocalTestDirectory 
+   Note : Go to the Testing section in the OpenStack.config file. Make sure that LocalTestDirectory 
    element points to the root of the test folder hierarchy (Folder1 in the example above).	  

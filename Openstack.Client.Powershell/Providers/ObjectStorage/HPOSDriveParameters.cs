@@ -13,9 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ============================================================================ */
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 
-namespace Openstack.Client.Powershell.Providers.Storage
+namespace OpenStack.Client.Powershell.Providers.Storage
 {
     public class OSDriveParameters
     {

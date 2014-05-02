@@ -16,18 +16,18 @@ limitations under the License.
 using System;
 using System.Text;
 using System.Management.Automation;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 using System.IO;
-using Openstack.Common;
+using OpenStack.Common;
 using System.Xml;
 using System.Xml.Serialization;
-using Openstack.Client.Powershell.Providers.Storage;
-using Openstack.Client.Powershell.Providers.Common;
+using OpenStack.Client.Powershell.Providers.Storage;
+using OpenStack.Client.Powershell.Providers.Common;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.Management.Automation.Host;
 
-namespace Openstack.Client.Powershell.Cmdlets.Common
+namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
     public class BasePSCmdlet : PSCmdlet
     {
@@ -83,15 +83,15 @@ namespace Openstack.Client.Powershell.Cmdlets.Common
         /// 
         /// </summary>
         //==================================================================================================
-        protected IOpenstackClient Client
+        protected IOpenStackClient CoreClient
         {
             get
             {
-                return (IOpenstackClient)this.SessionState.PSVariable.GetValue("Client", null);
+                return (IOpenStackClient)this.SessionState.PSVariable.GetValue("CoreClient", null);
             }
             set
             {
-                this.SessionState.PSVariable.Set(new PSVariable("Client", value));
+                this.SessionState.PSVariable.Set(new PSVariable("CoreClient", value));
             }
         }
         //==================================================================================================
@@ -120,7 +120,7 @@ namespace Openstack.Client.Powershell.Cmdlets.Common
         {
             get
             {               
-              return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\CLI.config";
+              return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\OpenStack.config";
             }
         }
         #endregion
@@ -198,7 +198,7 @@ namespace Openstack.Client.Powershell.Cmdlets.Common
             //if (isAuthorized == false && foundattribute == false) return;
 
             //if (!isAuthorized)
-            //    this.ThrowTerminatingError(new ErrorRecord(new InvalidOperationException("You're not current authorized to use this service. Please go to https://www.Openstack.com/ for more information on signing up for this service."), "aa", ErrorCategory.InvalidOperation, this));
+            //    this.ThrowTerminatingError(new ErrorRecord(new InvalidOperationException("You're not current authorized to use this service. Please go to https://www.OpenStack.com/ for more information on signing up for this service."), "aa", ErrorCategory.InvalidOperation, this));
         }        
         #endregion
         #region Methods

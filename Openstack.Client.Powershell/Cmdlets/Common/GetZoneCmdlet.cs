@@ -17,12 +17,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Openstack.Client.Powershell.Cmdlets.Common;
+using OpenStack.Client.Powershell.Cmdlets.Common;
 using System.Management.Automation;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace Openstack.Client.Powershell.Cmdlets.Common
+namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
     [Cmdlet("Get", "Zone", SupportsShouldProcess = true)]
     public class GetZoneCmdlet : BasePSCmdlet

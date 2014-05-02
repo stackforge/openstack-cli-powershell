@@ -15,11 +15,11 @@ limitations under the License.
 ============================================================================ */
 using System;
 using System.Management.Automation;
-using Openstack.Client.Powershell.Cmdlets.Common;
+using OpenStack.Client.Powershell.Cmdlets.Common;
 using System.Reflection;
-using Openstack.Client.Powershell.Providers.Common;
+using OpenStack.Client.Powershell.Providers.Common;
 
-namespace Openstack.Client.Powershell.Cmdlets.GroupManagement
+namespace OpenStack.Client.Powershell.Cmdlets.GroupManagement
 {
     [Cmdlet(VerbsCommon.Get, "Version", SupportsShouldProcess = true)]
     public class GetVersionCmdlet : BasePSCmdlet

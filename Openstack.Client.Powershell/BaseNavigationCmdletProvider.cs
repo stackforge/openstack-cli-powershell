@@ -16,46 +16,43 @@ limitations under the License.
 using System;
 using System.Management.Automation;
 using System.Management.Automation.Provider;
-using Openstack;
+using OpenStack;
 using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
 using System.Text;
 using System.Runtime.Serialization.Json;
-using Openstack.Client.Powershell.Providers.Storage;
+using OpenStack.Client.Powershell.Providers.Storage;
 using System.Reflection;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Threading;
-using Openstack.Client.Powershell.Utility;
-using Openstack.Storage;
+using OpenStack.Client.Powershell.Utility;
+using OpenStack.Storage;
 using System.Security;
 using System.Linq;
-using Openstack.Identity;
+using OpenStack.Identity;
 
 
-namespace Openstack.Client.Powershell.Providers.Common
+namespace OpenStack.Client.Powershell.Providers.Common
 {
     public class BaseNavigationCmdletProvider : NavigationCmdletProvider  
-    {
-        
-        OpenstackClient _client; // = new OpenstackClient(credential, CancellationToken.None);
-
-        
+    {        
+        OpenStackClient _client;         
 //=========================================================================================
 /// <summary>
 /// 
 /// </summary>
 //=========================================================================================
-        protected OpenstackClient Client
+        protected OpenStackClient Client
         {
             get
-            {                
-                return (OpenstackClient)this.SessionState.PSVariable.Get("Client").Value;
+            {
+                return (OpenStackClient)this.SessionState.PSVariable.Get("CoreClient").Value;
             }
             set
             {
-                this.SessionState.PSVariable.Set(new PSVariable("Client", value));
+                this.SessionState.PSVariable.Set(new PSVariable("CoreClient", value));
             }
         }
 //=========================================================================================
@@ -115,7 +112,7 @@ namespace Openstack.Client.Powershell.Providers.Common
                 }
                 catch (Exception)
                 {
-                    return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\CLI.config";
+                    return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\OpenStack.config";
                 }
             }
         }
@@ -139,27 +136,27 @@ namespace Openstack.Client.Powershell.Providers.Common
 /// </summary>
 //==================================================================================================
         protected void InitializeSession()
-        {            
-            CredentialManager manager       = new CredentialManager(false);
-            IOpenstackCredential credential = manager.GetCredentials(false);                   
+        {
+            ConfigurationManager configManager = new ConfigurationManager();
+            ExtensionManager loader            = new ExtensionManager(this.SessionState, this.Context);
+            configManager.Load();
+            ServiceProvider provider           = configManager.GetDefaultServiceProvider();
 
-            // Connect to the Service Provider..
-            
-            var client        = new OpenstackClient(credential, CancellationToken.None);
-            var connectTask   = client.Connect();
-            connectTask.Wait();
-            
-            // Setup the environment based on what came back from Auth..
+            if (provider.Name == String.Empty && provider.IsDefault == true)
+            {
+                // Technically Core is already loaded (you're in it :) but this signs in for you to the ServiceProvider selected..
+                // This is just used in the case where it's the Users first time loading the CLI..
 
-            Context context           = new Context();
-            context.ServiceCatalog    = credential.ServiceCatalog;
-            context.Settings          = Settings.Default;
-            context.ProductName       = "Openstack-WinCLI";
-            context.Version           = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                loader.LoadCore(provider);
+            }
+            else
+            {
+                // Load any extensions that were supplied by the ServiceProvider...
 
-            this.SessionState.PSVariable.Set(new PSVariable("Context", context));
-            this.SessionState.PSVariable.Set(new PSVariable("Client", client));           
-            this.SetZoneColor();
+                loader.LoadExtension(provider);
+            }
+
+            this.SetZoneColor();            
       }
         #region Implementation of DriveCmdletProvider    
 //==================================================================================================
@@ -221,8 +218,7 @@ namespace Openstack.Client.Powershell.Providers.Common
         {         
             return true;
         }
-        #endregion
-    
+        #endregion    
 //==================================================================================================
 /// <summary>
 /// This test should not verify the existance of the item at the path. 

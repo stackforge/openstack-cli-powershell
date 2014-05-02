@@ -19,44 +19,63 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Openstack.Client.Powershell.Utility
+namespace OpenStack.Client.Powershell.Utility
 {
-    public class ServiceProvider
+    public class ServiceProvider 
     {
         private string _name;
         private bool _isDefault = false;
         private string _authenticationServiceURI;
         private string _defaultTenantId;
-        private string _username;
+        private bool _isDirty = false;
+        private List<CredentialElement> _credentialElements = new List<CredentialElement>();
+        private string _configFilePath;
 
-        public string Username
+        public string ConfigFilePath
         {
-            get { return _username; }
-            set { _username = value; }
+            get { return _configFilePath; }
+            set { _configFilePath = value; }
+        }
+
+        public List<CredentialElement> CredentialElements
+        {
+            get { return _credentialElements; }
+            set { _credentialElements = value; }
+        }
+
+
+        public bool IsDirty
+        {
+            get { return _isDirty; }
+            set { _isDirty = value; }
         }
 
         public string DefaultTenantId
         {
             get { return _defaultTenantId; }
-            set { _defaultTenantId = value; }
+            set
+            {
+                _defaultTenantId = value; 
+                _isDirty = true;
+            }
         }
 
         public string AuthenticationServiceURI
         {
             get { return _authenticationServiceURI; }
-            set { _authenticationServiceURI = value; }
+            set { _authenticationServiceURI = value; _isDirty = true; }
         }
 
         public bool IsDefault
         {
             get { return _isDefault; }
-            set { _isDefault = value; }
+            set { _isDefault = value; _isDirty = true; }
         }
 
         public string Name
         {
             get { return _name; }
-            set { _name = value; }
+            set { _name = value; _isDirty = true; }
         }
     }
 }

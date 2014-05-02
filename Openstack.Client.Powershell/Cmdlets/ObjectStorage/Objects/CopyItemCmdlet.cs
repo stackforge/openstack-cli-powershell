@@ -14,18 +14,18 @@
 //limitations under the License.
 //============================================================================ */
 //using System.Management.Automation;
-//using Openstack.Objects;
-//using Openstack.Objects.Domain;
-//using Openstack.Client.Powershell.Providers.Storage;
+//using OpenStack.Objects;
+//using OpenStack.Objects.Domain;
+//using OpenStack.Client.Powershell.Providers.Storage;
 //using System;
-//using Openstack.Objects.DataAccess.Storage;
-//using Openstack.Client.Powershell.Providers.Common;
+//using OpenStack.Objects.DataAccess.Storage;
+//using OpenStack.Client.Powershell.Providers.Common;
 //using System.IO;
 
-//namespace Openstack.Client.Powershell.Cmdlets.Common
+//namespace OpenStack.Client.Powershell.Cmdlets.Common
 //{
 //    [Cmdlet(VerbsCommon.Copy, "Item", SupportsShouldProcess = true)]
-//    [RequiredServiceIdentifierAttribute(Openstack.Objects.Domain.Admin.Services.ObjectStorage)]
+//    [RequiredServiceIdentifierAttribute(OpenStack.Objects.Domain.Admin.Services.ObjectStorage)]
 //    public class CopyItemCmdlet : BasePSCmdlet
 //    {
 //        public const string cDelimiter = "/";
@@ -223,7 +223,7 @@
 //            IStorageObjectRepository repository = this.RepositoryFactory.CreateStorageObjectRepository();
 
 
-//            if (sourcePath.PathType == Openstack.Common.PathType.Local && targetPath.PathType == Openstack.Common.PathType.Remote)
+//            if (sourcePath.PathType == OpenStack.Common.PathType.Local && targetPath.PathType == OpenStack.Common.PathType.Remote)
 //            {
 //                long lastSegment = repository.GetLastSegmentId(targetPath);
 //                if (lastSegment != 0)

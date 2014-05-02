@@ -16,17 +16,17 @@ limitations under the License.
 using System.Collections.Generic;
 using System.Management.Automation;
 using System.Collections;
-using Openstack;
+using OpenStack;
 using System.Diagnostics.Contracts;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 using System;
 using System.IO;
 using System.Linq;
-using Openstack.Storage;
-using Openstack.Identity;
+using OpenStack.Storage;
+using OpenStack.Identity;
 
 
-namespace Openstack.Client.Powershell.Providers.Storage
+namespace OpenStack.Client.Powershell.Providers.Storage
 {
     public class OpenStackPSDriveInfo : PSDriveInfo 
     {
@@ -138,7 +138,7 @@ namespace Openstack.Client.Powershell.Providers.Storage
         {
             foreach (PSDriveInfo drive in this.Provider.Drives)
             {
-                if (drive.Provider.Name == "OS-Storage" && drive.Name.Contains(name))
+                if (drive.Provider.Name == "Object Storage" && drive.Name.Contains(name))
                     return true;
             }
             return false;
@@ -228,6 +228,23 @@ namespace Openstack.Client.Powershell.Providers.Storage
 /// <summary>
 /// 
 /// </summary>
+//==================================================================================================
+        private string StorageServiceURL
+        {
+            get
+            {
+                return this._context.ServiceCatalog.GetPublicEndpoint("object-store", null).ToString();
+
+                //if (this.Drive.SharePath == null)
+                //    return this.Context.ServiceCatalog.GetPublicEndpoint("object-store", null).ToString();             //.GetService("object-store").Url;
+                //else
+                //    return this.Drive.SharePath;
+            }
+        }
+//==================================================================================================
+/// <summary>
+/// 
+/// </summary>
 /// <param name="path"></param>
 /// <returns></returns>
 //==================================================================================================
@@ -250,6 +267,7 @@ namespace Openstack.Client.Powershell.Providers.Storage
                     // If the path supplied already contains a storageContainer name, strip it out and pass it in as the volume name..
 
                     path = path.Replace(firstElement, string.Empty);
+
                     return new StoragePath(this.StorageServiceUrl);                 
              
                 }
@@ -345,7 +363,11 @@ namespace Openstack.Client.Powershell.Providers.Storage
         {
             get
             {
-                return _storageServiceUrl;
+                if (this.SharePath == null)
+                    return this._context.ServiceCatalog.GetPublicEndpoint("Object Storage", "region-a.geo-1").ToString();
+                    //return this._context.ServiceCatalog.GetPublicEndpoint("Object Storage", null).ToString();
+                else
+                    return this.SharePath;
             }
         }
 //==================================================================================================

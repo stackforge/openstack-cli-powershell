@@ -21,12 +21,29 @@ using System.Xml.Linq;
 using System.Collections;
 using System.Configuration;
 using System.IO;
+using System.Xml.XPath;
+using System;
+using System.Management.Automation;
+using System.Reflection;
+using System.Security.Policy;
+using OpenStack.Client.Powershell.Utility;
+using System.Linq;
+using OpenStack.Identity;
+using System.Threading;
 
-namespace Openstack.Client.Powershell.Utility
+namespace OpenStack.Client.Powershell.Utility
 {
     public sealed partial class Settings : Hashtable
     {
         private static Settings defaultInstance = new Settings();
+        private static string _configFilePath;
+        private XDocument _document;
+
+        public string ConfigFilePath
+        {
+            get { return _configFilePath; }
+            set { _configFilePath = value; }
+        }
         
         #region Ctors      
 //==================================================================================================
@@ -656,20 +673,18 @@ namespace Openstack.Client.Powershell.Utility
 //==================================================================================================
         public void Reset()
         {
-            System.Diagnostics.Debug.WriteLine("here");
-
-            if (File.Exists("CLI.config"))
+            if (File.Exists("OpenStack.config"))
             {
-                this.Load("CLI.config");
+                this.Load("OpenStack.config");
             }
-            else if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\CLI.config"))
+            else if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\OpenStack.config"))
             {
-                string configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\CLI.config";
+                string configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\OpenStack.config";
                 this.Load(configFilePath);
             }
             else
             {
-                throw new InvalidOperationException("Unable to locate CLI.config file.");
+                throw new InvalidOperationException("Unable to locate OpenStack.config file.");
             }
         }
 //==================================================================================================
@@ -696,6 +711,7 @@ namespace Openstack.Client.Powershell.Utility
             {
                 Settings settings  = new Settings(true);
                 XDocument document = XDocument.Load(configFilePath);
+               _configFilePath = configFilePath;
 
                 foreach (XElement element in document.Descendants("add"))
                 {
@@ -713,7 +729,7 @@ namespace Openstack.Client.Powershell.Utility
         }
 //==================================================================================================
 /// <summary>
-/// Fully Qualified path to a config file
+/// Fully Qualified path to a config file 
 /// </summary>
 /// <param name="settings"></param>
 //==================================================================================================
@@ -722,12 +738,17 @@ namespace Openstack.Client.Powershell.Utility
             try
             {               
                 XDocument document = XDocument.Load(configFilePath);
+                _configFilePath = configFilePath;
                 this.Clear();
                 foreach (XElement element in document.Descendants("add"))
                 {
                     string key   = element.Attribute(XName.Get("key")).Value;
                     string value = element.Attribute(XName.Get("value")).Value;
-                    this.Add(key, value);
+                    try
+                    {
+                        this.Add(key, value);
+                    }
+                    catch (Exception) { }
                 }
             }
             catch (Exception ex)
@@ -736,6 +757,31 @@ namespace Openstack.Client.Powershell.Utility
                 throw ex;
             }           
         }
+//=========================================================================================
+/// <summary>
+/// 
+/// </summary>
+/// <returns></returns>
+//=========================================================================================
+        private string GetConfigPath()
+        {
+            //if (_configFilePath != null)
+            //    return _configFilePath;
+
+            if (File.Exists("OpenStack.config"))
+            {
+                return this.GetType().Assembly.Location;
+            }
+            else if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\OpenStack.config"))
+            {
+                return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\OpenStack.config";
+            }
+            else
+            {
+                throw new InvalidOperationException("Unable to locate OpenStack.config file.");
+            }
+        }
+
         #endregion
     }
 }

@@ -15,19 +15,19 @@
 //============================================================================ */
 //using System;
 //using System.Management.Automation;
-//using Openstack.Objects.DataAccess;
-//using Openstack.Objects.Domain;
-//using Openstack.Client.Powershell.Providers.Storage;
-//using Openstack.Common;
+//using OpenStack.Objects.DataAccess;
+//using OpenStack.Objects.Domain;
+//using OpenStack.Client.Powershell.Providers.Storage;
+//using OpenStack.Common;
 //using System.Management.Automation.Host;
 //using System.Collections.ObjectModel;
 //using System.Diagnostics.Contracts;
-//using Openstack.Client.Powershell.Providers.Common;
+//using OpenStack.Client.Powershell.Providers.Common;
 
-//namespace Openstack.Client.Powershell.Cmdlets.Common
+//namespace OpenStack.Client.Powershell.Cmdlets.Common
 //{
 //    [Cmdlet(VerbsCommon.Remove, "Item", SupportsShouldProcess = true)]
-//    [RequiredServiceIdentifierAttribute(Openstack.Objects.Domain.Admin.Services.ObjectStorage)]
+//    [RequiredServiceIdentifierAttribute(OpenStack.Objects.Domain.Admin.Services.ObjectStorage)]
 //    public class RemoveItemCmdlet : BasePSCmdlet
 //    {
 //        public const string cDelimiter = "/";

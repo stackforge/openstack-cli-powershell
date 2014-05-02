@@ -13,24 +13,23 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ============================================================================ */
-using Openstack.Common;
-using Openstack;
+using OpenStack.Common;
+using OpenStack;
 using System.Security;
 using System.Reflection;
-using Openstack.Identity;
+using OpenStack.Identity;
 
-namespace Openstack.Client.Powershell.Utility
+namespace OpenStack.Client.Powershell.Utility
 {
     public class Context
     {
-        private IOpenstackServiceCatalog _serviceCatalog;
+        private IOpenStackServiceCatalog _serviceCatalog;
         private Settings _settings;
         //private Token _accessToken;
         private string _productName = "OpenstackDotNetAPI";
         private string _version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         private string _forecolor = "Green";
-
-
+        
         #region Ctors
         //==================================================================================================
         /// <summary>
@@ -98,7 +97,7 @@ namespace Openstack.Client.Powershell.Utility
         /// 
         /// </summary>
         //==================================================================================================
-        public IOpenstackServiceCatalog ServiceCatalog
+        public IOpenStackServiceCatalog ServiceCatalog
         {
             get { return _serviceCatalog; }
             set { _serviceCatalog = value; }

@@ -15,7 +15,7 @@ limitations under the License.
 ============================================================================ */
 using System.Xml.Serialization;
 
-namespace Openstack.Client.Powershell.Utility
+namespace OpenStack.Client.Powershell.Utility
 {
 
     public enum StorageOperationType

@@ -16,12 +16,12 @@ limitations under the License.
 using System;
 using System.Management.Automation;
 using System.Collections;
-using Openstack.Client.Powershell.Cmdlets.Common;
+using OpenStack.Client.Powershell.Cmdlets.Common;
 using System.IO;
 using System.Xml;
-using Openstack.Objects.Domain.Admin;
+using OpenStack.Identity;
 
-namespace Openstack.Client.Powershell.Cmdlets.Common
+namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
     [Cmdlet(VerbsCommon.Get, "Catalog", SupportsShouldProcess = true)]
     public class GetCatalogCmdlet : BasePSCmdlet
@@ -79,15 +79,15 @@ namespace Openstack.Client.Powershell.Cmdlets.Common
 /// </summary>
 /// <param name="endpoint"></param>
 //=======================================================================================================
-        private void PrintEndpoint(Endpoint endpoint)
+        private void PrintEndpoint(OpenStackServiceEndpoint endpoint)
         {
             Console.WriteLine("Region       : " + endpoint.Region);
-            Console.WriteLine("Public URL   : " + endpoint.PublicURL);
-            Console.WriteLine("Internal URL : " + endpoint.InternalURL);
-            Console.WriteLine("Admin URL    : " + endpoint.AdminURL);
-            Console.WriteLine("Version      : " + endpoint.Version.Id);
-            Console.WriteLine("Version Info : " + endpoint.Version.InfoURL);
-            Console.WriteLine("Version List : " + endpoint.Version.ListURL);
+            Console.WriteLine("Public URL   : " + endpoint.PublicUri.ToString());
+            //Console.WriteLine("Internal URL : " + endpoint..InternalURL);
+            //Console.WriteLine("Admin URL    : " + endpoint.AdminURL);
+            Console.WriteLine("Version      : " + endpoint.Version);
+            //Console.WriteLine("Version Info : " + endpoint.Version.InfoURL);
+            //Console.WriteLine("Version List : " + endpoint.Version.ListURL);
             Console.WriteLine();
         }
 //=======================================================================================================
@@ -96,7 +96,7 @@ namespace Openstack.Client.Powershell.Cmdlets.Common
 /// </summary>
 /// <param name="service"></param>
 //=======================================================================================================
-        private void PrintServiceVerbose(Service service)
+        private void PrintServiceVerbose(OpenStackServiceDefinition service)
         {
             Console.WriteLine("");
             this.WriteSection ("Service : " + service.Name);
@@ -114,7 +114,7 @@ namespace Openstack.Client.Powershell.Cmdlets.Common
             Console.WriteLine("");
             Console.ForegroundColor = ConsoleColor.Green;
 
-            foreach (Endpoint endpoint in  service.Endpoints)
+            foreach (OpenStackServiceEndpoint endpoint in service.Endpoints)
             {
                 this.PrintEndpoint(endpoint);
             }
@@ -130,7 +130,7 @@ namespace Openstack.Client.Powershell.Cmdlets.Common
             this.WriteSection("You have access to the following Services ");
             WriteObject("");
 
-            foreach (Service service in this.Context.ServiceCatalog)
+            foreach (OpenStackServiceDefinition service in this.Context.ServiceCatalog)
             {
                 if (!_verbose)
                     WriteObject(service);

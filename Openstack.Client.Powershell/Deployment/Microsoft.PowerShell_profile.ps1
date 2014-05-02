@@ -46,7 +46,7 @@
 	echo '   ==> Registering Providers...'
 
 	$tempvar = get-programfilesdir
-	$tempvar = $tempvar  + "\Openstack\OpenStack-Powershell"
+	$tempvar = $tempvar  + "\OpenStack\OpenStack-Powershell"
 	cd $tempvar
 	import-module .\CLIManifest.psd1  -DisableNameChecking  
 

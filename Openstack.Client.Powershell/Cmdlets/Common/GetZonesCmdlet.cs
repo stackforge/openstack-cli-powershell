@@ -17,18 +17,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Openstack.Client.Powershell.Cmdlets.Common;
+using OpenStack.Client.Powershell.Cmdlets.Common;
 using System.Management.Automation;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Openstack.Objects.Domain.Admin;
 
-namespace Openstack.Client.Powershell.Cmdlets.Common
+namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
     [Cmdlet("Get", "Zones", SupportsShouldProcess = true)]
     public class GetZonesCmdlet : BasePSCmdlet
     {
-        private SwitchParameter _verbose = false;
+        private SwitchParameter _verbose = true;
 
 //=========================================================================================
 /// <summary>
@@ -60,7 +59,7 @@ namespace Openstack.Client.Powershell.Cmdlets.Common
                 Console.WriteLine("");
                 Console.WriteLine("The following Services are available from this Availability Zone");
                 Console.WriteLine("----------------------------------------------------------------");
-                this.WriteObject(this.Context.ServiceCatalog.GetAZServices(element.Attribute("name").Value));
+                this.WriteObject(this.Context.ServiceCatalog.GetServicesInAvailabilityZone(element.Attribute("name").Value));
                 Console.WriteLine("");
             }
             Console.WriteLine("");
@@ -72,24 +71,24 @@ namespace Openstack.Client.Powershell.Cmdlets.Common
 //=========================================================================================
         private void ShowNonVerboseOutput(IEnumerable<XElement> zoneKeyNode)
         {
-            Console.WriteLine("");
-            Console.WriteLine("Current Availability Zones include ");
-            Console.WriteLine("");
-            foreach (XElement element in zoneKeyNode)
-            {
-                Zone zone                 = new Zone();
-                zone.Name                 = element.Attribute("name").Value;
-                zone.ShellForegroundColor = element.Attribute("shellForegroundColor").Value;
-                zone.Id                   = element.Attribute("id").Value;
+            //Console.WriteLine("");
+            //Console.WriteLine("Current Availability Zones include ");
+            //Console.WriteLine("");
+            //foreach (XElement element in zoneKeyNode)
+            //{
+            //    Zone zone                 = new Zone();
+            //    zone.Name                 = element.Attribute("name").Value;
+            //    zone.ShellForegroundColor = element.Attribute("shellForegroundColor").Value;
+            //    zone.Id                   = element.Attribute("id").Value;
 
-                if (element.Attribute("isDefault").Value == "True")
-                    zone.IsDefault = true;
-                else
-                    zone.IsDefault = false;
+            //    if (element.Attribute("isDefault").Value == "True")
+            //        zone.IsDefault = true;
+            //    else
+            //        zone.IsDefault = false;
 
-                this.WriteObject(zone);
-            }
-            Console.WriteLine("");
+            //    this.WriteObject(zone);
+            //}
+            //Console.WriteLine("");
         }
 //=========================================================================================
 /// <summary>

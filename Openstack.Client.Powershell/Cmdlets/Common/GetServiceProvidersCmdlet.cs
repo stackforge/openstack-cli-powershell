@@ -15,25 +15,26 @@
 //============================================================================ */
 using System;
 using System.Management.Automation;
-using Openstack.Client.Powershell.Providers.Common;
+using OpenStack.Client.Powershell.Providers.Common;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
-using Openstack;
+using OpenStack;
 using System.Xml.Linq;
 using System.Collections.Generic;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 using System.Linq;
 
-namespace Openstack.Client.Powershell.Cmdlets.Common
+namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
     [Cmdlet(VerbsCommon.Get, "SP", SupportsShouldProcess = true)]
-    //[RequiredServiceIdentifierAttribute(Openstack.Objects.Domain.Admin.Services.ObjectStorage)]
+    //[RequiredServiceIdentifierAttribute(OpenStack.Objects.Domain.Admin.Services.ObjectStorage)]
     public class GetServiceProvidersCmdlet : BasePSCmdlet
     {       
         #region Parameters
         #endregion
         #region Methods
+
 //=========================================================================================
 /// <summary>
 /// 
@@ -41,22 +42,9 @@ namespace Openstack.Client.Powershell.Cmdlets.Common
 //=========================================================================================
         protected override void ProcessRecord()
         {
-            List<ServiceProvider> serviceProviders     = new List<ServiceProvider>();
-            XDocument doc                              = XDocument.Load(this.ConfigFilePath);
-            IEnumerable<XElement> serviceProviderNodes = doc.Descendants("ServiceProvider");
-            
-            foreach (XElement element in serviceProviderNodes)
-            {
-                ServiceProvider provider = new ServiceProvider();
-                provider.AuthenticationServiceURI = element.Elements().Where(e => e.Attribute("key").Value == "AuthenticationServiceURI").Attributes("value").Single().Value;
-                provider.DefaultTenantId          = element.Elements().Where(e => e.Attribute("key").Value == "DefaultTenantId").Attributes("value").Single().Value;
-                provider.Username                 = element.Elements().Where(e => e.Attribute("key").Value == "Username").Attributes("value").Single().Value;
-                provider.IsDefault                = Convert.ToBoolean(element.Attribute("isDefault").Value);
-                provider.Name                     = element.Attribute("name").Value;
-
-                serviceProviders.Add(provider);                
-            }
-            this.WriteObject(serviceProviders);
+            ConfigurationManager manager = new ConfigurationManager();
+            manager.Load();
+            this.WriteObject(manager.GetServiceProviders());
         }
         #endregion
     }

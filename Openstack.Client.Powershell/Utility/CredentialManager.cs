@@ -17,21 +17,21 @@ using System;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Security;
-using Openstack.Identity;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Identity;
+using OpenStack.Client.Powershell.Utility;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace Openstack.Client.Powershell.Utility
+namespace OpenStack.Client.Powershell.Utility
 {   
 
     public class ServiceProviderInfo
     {
         public string Name;
-        public IOpenstackCredential Credential;
-        public string ServbiceProviderUrl;
+        public IOpenStackCredential Credential;
+        public string ServiceProviderUrl;
     }
 
     public class CredentialManager
@@ -58,33 +58,6 @@ namespace Openstack.Client.Powershell.Utility
             if (accountIdNode == String.Empty || accessKeyNode == String.Empty || identityServiceURI == String.Empty || tenantId == String.Empty)
                 return true;
             else return false;
-
-
-
-
-            //// First make sure the User info exist..
-
-            //System.Collections.Generic.IEnumerable<XAttribute> attributes = accountIdNode.Attributes();
-            //foreach (XAttribute attribute in attributes)
-            //{
-            //    if (attribute.Name == "value" && attribute.Value == string.Empty)
-            //    {
-            //        return true;
-            //    }
-            //}
-
-            //// Now check to ensure the auth key exist
-
-            //System.Collections.Generic.IEnumerable<XAttribute> attributes2 = accessKeyNode.Attributes();
-            //foreach (XAttribute attribute in attributes2)
-            //{
-            //    if (attribute.Name == "value" && attribute.Value == string.Empty)
-            //    {
-            //        return true;
-            //    }
-            //}
-
-            //return false;
         }
 //==================================================================================================
 /// <summary>
@@ -205,6 +178,38 @@ namespace Openstack.Client.Powershell.Utility
 /// </summary>
 /// <returns></returns>
 //==================================================================================================
+        private ServiceProviderInfo PromptForCredentials(XElement element)
+        {
+            ServiceProviderInfo info = new ServiceProviderInfo();
+
+            Console.WriteLine("User Name  : ");
+            string username = Console.ReadLine();
+            Console.WriteLine("");
+            Console.WriteLine("Password   : ");
+            string password = CredentialManager.ReadPassword();
+            Console.WriteLine("");
+            Console.WriteLine("Tenant Name : ");
+            string tenantName = Console.ReadLine();
+            Console.WriteLine("");
+            Console.WriteLine("Service Provider Identity Service Url : ");
+            string identityServiceUrl = Console.ReadLine();
+            Console.WriteLine("");
+            Console.WriteLine("Finally supply a name for this Profile.");
+            string name = Console.ReadLine();
+            Console.WriteLine("");
+            Console.WriteLine("");
+            info.Credential = new OpenStackCredential(new Uri(identityServiceUrl), username, password, tenantName);
+            info.ServiceProviderUrl = identityServiceUrl;
+            info.Name = name;
+
+            return info;
+        }
+//==================================================================================================
+/// <summary>
+/// 
+/// </summary>
+/// <returns></returns>
+//==================================================================================================
         private ServiceProviderInfo PromptForCredentials()
         {
             ServiceProviderInfo info = new ServiceProviderInfo();
@@ -225,8 +230,8 @@ namespace Openstack.Client.Powershell.Utility
             string name = Console.ReadLine();
             Console.WriteLine("");
             Console.WriteLine("");
-            info.Credential =  new OpenstackCredential(new Uri(identityServiceUrl), username, this.ConvertToSecureString(password), tenantName);
-            info.ServbiceProviderUrl = identityServiceUrl;
+            info.Credential = new OpenStackCredential(new Uri(identityServiceUrl), username, password, tenantName);
+            info.ServiceProviderUrl = identityServiceUrl;
             info.Name = name;
 
             return info;
@@ -244,7 +249,7 @@ namespace Openstack.Client.Powershell.Utility
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("We've noticed that you haven't supplied any credentials yet. To continue we need to get your Username, ");
             Console.WriteLine("Password, and the Tenant Id provided to you during the sign up process. If you haven't signed up");
-            Console.WriteLine("for any services yet, just go to https://console.Openstack.com for details on how to get started today!");
+            Console.WriteLine("for any services yet, just go to https://console.OpenStack.com for details on how to get started today!");
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("=======================================================================================================");
             Console.ForegroundColor = ConsoleColor.Green;
@@ -262,7 +267,7 @@ namespace Openstack.Client.Powershell.Utility
             Console.WriteLine("=======================================================================================================");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("The credentials that you have supplied could not be verified. Please try again. If you continue to have ");
-            Console.WriteLine("problems please feel free to contact our support staff at https://console.Openstack.com");
+            Console.WriteLine("problems please feel free to contact our support staff at https://console.OpenStack.com");
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("=======================================================================================================");
             Console.ForegroundColor = ConsoleColor.Green;
@@ -273,13 +278,15 @@ namespace Openstack.Client.Powershell.Utility
 /// 
 /// </summary>
 //==================================================================================================
-        public IOpenstackCredential GetCredentials(bool badCredentialsSupplied = false)
+        public IOpenStackCredential GetCredentials(bool badCredentialsSupplied = false)
         {
             ServiceProviderInfo info;
-            IOpenstackCredential credential;
+            IOpenStackCredential credential;
 
-            string configFilePath        = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\CLI.config";
+            string configFilePath        = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\OpenStack.config";
             XDocument doc                = XDocument.Load(configFilePath);
+
+
             XElement serviceProviderNode = doc.Descendants("ServiceProvider").Where(a => a.Attribute("isDefault").Value == "True").FirstOrDefault();
             XElement username            = serviceProviderNode.Elements().Where(u => u.Name == "add" && u.Attribute("key").Value == "Username").Single();        
             XElement password            = serviceProviderNode.Elements().Where(u => u.Name == "add" && u.Attribute("key").Value == "Password").Single();
@@ -301,7 +308,7 @@ namespace Openstack.Client.Powershell.Utility
                 {
                     // The test client would be an example of where we need to supress the prompt for credentials. Here we just raise an exception instead..
 
-                    throw new SecurityException("You must supply a valid Access Key and Secret Key in the CLI.config file to start unit testing.");
+                    throw new SecurityException("You must supply a valid Access Key and Secret Key in the OpenStack.config file to start unit testing.");
                 }
 
                 while (!this.VerifyCredentials(username.Value, password.Value))
@@ -313,7 +320,7 @@ namespace Openstack.Client.Powershell.Utility
                 }
 
                 username.SetAttributeValue("value", credential.UserName);
-                password.SetAttributeValue("value", this.convertToUNSecureString(credential.Password));
+                password.SetAttributeValue("value", credential.Password);
                 tenantId.SetAttributeValue("value", credential.TenantId);
                 identityServiceUrl.SetAttributeValue("value", credential.AuthenticationEndpoint.AbsoluteUri);
                 name.SetValue(info.Name);
@@ -326,10 +333,11 @@ namespace Openstack.Client.Powershell.Utility
 
             // We didn't need to prompt for credentials from the user so just send back what we found in the config file..
 
-            SecureString securePassword = new SecureString();
-            password.Attribute("value").Value.ToCharArray().ToList().ForEach(securePassword.AppendChar);
-            string h = this.convertToUNSecureString(securePassword);
-            IOpenstackCredential newCredential = new OpenstackCredential(new Uri(identityServiceUrl.Attribute("value").Value), username.Attribute("value").Value, securePassword, tenantId.Attribute("value").Value);
+            //SecureString securePassword = new SecureString();
+            //password.Attribute("value").Value.ToCharArray().ToList().ForEach(securePassword.AppendChar);
+
+
+            IOpenStackCredential newCredential = new OpenStackCredential(new Uri(identityServiceUrl.Attribute("value").Value), username.Attribute("value").Value, password.Attribute("value").Value, tenantId.Attribute("value").Value);
 
             return newCredential;
         }

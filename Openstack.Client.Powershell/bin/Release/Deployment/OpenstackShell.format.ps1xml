@@ -889,7 +889,7 @@
     <View>
       <Name>process4</Name>
       <ViewSelectedBy>
-        <TypeName>Openstack.Client.Powershell.Providers.ObjectStorage.StorageItemModelView</TypeName>
+        <TypeName>Openstack.Client.Powershell.Providers.ObjectStorage.StorageItemViewModel</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>

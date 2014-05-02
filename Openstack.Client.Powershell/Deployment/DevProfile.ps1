@@ -17,7 +17,7 @@ Echo ''
 $a.ForegroundColor = "gray"
 Echo '========================================================================================'
 $a.ForegroundColor = "yellow"
-Echo 'Welcome to the OpenStack Powershell Environment.333'
+Echo 'Welcome to the OpenStack Powershell Environment.'
 $a.ForegroundColor = "gray"
 Echo '========================================================================================'
 Echo ''
@@ -29,12 +29,41 @@ echo '   ==> Registering Providers...'
 #  $(TargetDir) macro in the Post-Build Script.
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
- #cd C:\Users\tplummer\Source\Repos\OpenStack-CLI\Openstack.Client.Powershell\bin\Release
- cd C:\Users\tplummer\Source\Repos\OpenStack-NewCLI\Openstack.Client.Powershell\bin\Release
 
-import-module .\CLIManifest.psd1 -DisableNameChecking
+
+
+
+
+#Save the current value in the $p variable.
+$p = [Environment]::GetEnvironmentVariable("PSModulePath")
+
+#Add the new path to the $p variable. Begin with a semi-colon separator.
+$p += ";C:\Users\tplummer\Documents\WindowsPowerShell\Modules\OpenStack\"
+
+#Add the paths in $p to the PSModulePath value.
+[Environment]::SetEnvironmentVariable("PSModulePath",$p)
+
+
+
+
+
+
+
+
+
+
+
+ #cd C:\Users\tplummer\Source\Repos\OpenStack-CLI\OpenStack.Client.Powershell\bin\Release
+ #cd C:\Users\tplummer\Source\Repos\OpenStack-NewCLI\OpenStack.Client.Powershell\bin\Release
+ #import-module .\CLIManifest.psd1 -DisableNameChecking
+
+ import-module OpenStack-Core -DisableNameChecking
+
+
 cd Builds:
 cd 1-3-4-5
+
+#set-sp Rackspace
 
 
 #cd OpenStack:
