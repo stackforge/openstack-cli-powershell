@@ -26,6 +26,8 @@ using OpenStack.Client.Powershell.Providers.Common;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.Management.Automation.Host;
+using System.Threading;
+using Openstack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
@@ -82,6 +84,19 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
         /// <summary>
         /// 
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="service"></param>
+        /// <returns></returns>
+        //==================================================================================================
+        protected T CreateServiceClient<T>(CoreServices service) where T : IOpenStackServiceClient
+        {
+            ServiceProvider provider = this.Context.CurrentServiceProvider;
+            return this.CoreClient.CreateServiceClientByName<T>(provider.ServiceMaps.TranslateServiceName(service));
+        }
+        //==================================================================================================
+        /// <summary>
+        /// 
+        /// </summary>
         //==================================================================================================
         protected IOpenStackClient CoreClient
         {
@@ -95,6 +110,17 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
             }
         }
         //==================================================================================================
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //==================================================================================================
+         protected override void StopProcessing()
+        {
+            CancellationTokenSource source = (CancellationTokenSource)this.SessionState.PSVariable.Get("CancellationTokenSource").Value;
+            source.Cancel();
+        }
+      //==================================================================================================
         /// <summary>
         /// 
         /// </summary>
@@ -209,6 +235,7 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
         /// <param name="entity"></param>
         /// <returns></returns>
         //=========================================================================================
+      
         protected bool UserConfirmsDeleteAction(string entity)
         {
             Collection<ChoiceDescription> choices = new Collection<ChoiceDescription>();
@@ -301,10 +328,10 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
         /// </summary>
         /// <param name="path"></param>
         //=========================================================================================
-        //protected StoragePath CreateStoragePath(string path)
-        //{
-        //    return ((OSDriveInfo)this.Drive).CreateStoragePath(path);
-        //}
+        protected StoragePath CreateStoragePath(string path)
+        {
+            return ((ObjectStoragePSDriveInfo)this.Drive).CreateStoragePath(path);
+        }
         #endregion
     }
 }

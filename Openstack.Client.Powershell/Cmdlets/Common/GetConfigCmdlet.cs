@@ -16,9 +16,6 @@ limitations under the License.
 using System;
 using System.Management.Automation;
 using System.Collections;
-using OpenStack.Client.Powershell.Cmdlets.Common;
-using System.IO;
-using System.Xml;
 
 namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
@@ -61,9 +58,9 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
             {              
                 if (((string)setting.Key) == "SecretKey" || ((string)setting.Key)== "AccessKey")
                 {
-                    DictionaryEntry entry = new DictionaryEntry();
-                    entry.Value           = "***********";
-                    entry.Key             = setting.Key;
+                    var entry   = new DictionaryEntry();
+                    entry.Value = "***********";
+                    entry.Key   = setting.Key;
                     WriteObject(entry);
                 }
                 else

@@ -19,11 +19,13 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using Openstack.Client.Powershell.Utility;
 using OpenStack.Client.Powershell.Utility;
 using OpenStack.Identity;
 
 namespace OpenStack.Client.Powershell.Utility
-{  
+{
+    [ServiceProviderAttribute("Default")]
     public class OpenstackCoreRegistrationManager : RegistrationManager
     {
         public override RegistrationResponse Register(ServiceProvider serviceProvider)

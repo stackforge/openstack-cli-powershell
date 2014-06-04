@@ -14,18 +14,19 @@
 //limitations under the License.
 //============================================================================ */
 //using System.Management.Automation;
-//using OpenStack.Objects;
-//using OpenStack.Objects.Domain;
+//using OpenStack;
 //using OpenStack.Client.Powershell.Providers.Storage;
 //using System;
-//using OpenStack.Objects.DataAccess.Storage;
 //using OpenStack.Client.Powershell.Providers.Common;
 //using System.IO;
+//using OpenStack.Client.Powershell.Utility;
+//using OpenStack.Storage;
+//using System.Net.Http;
 
 //namespace OpenStack.Client.Powershell.Cmdlets.Common
 //{
 //    [Cmdlet(VerbsCommon.Copy, "Item", SupportsShouldProcess = true)]
-//    [RequiredServiceIdentifierAttribute(OpenStack.Objects.Domain.Admin.Services.ObjectStorage)]
+//    //[RequiredServiceIdentifierAttribute(OpenStack.Objects.Domain.Admin.Services.ObjectStorage)]
 //    public class CopyItemCmdlet : BasePSCmdlet
 //    {
 //        public const string cDelimiter = "/";
@@ -33,11 +34,11 @@
 //        private string _sourcePath;
 //        private string _targetPath;
 //        private SwitchParameter _recursive;
-//         private long _bytesCopied = 0;
+//        private long _bytesCopied = 0;
 //        private int _filesCopied = 0;
 //        private long _totalBytesCopied = 0;
 //        private int _totalFilesCopied = 0;
-        
+
 //        #region Ctors
 ////=========================================================================================
 ///// <summary>
@@ -106,11 +107,11 @@
 //        {
 //            get
 //            {
-//                if (((OSDriveInfo)this.Drive).SharePath == null)
-//                    return this.Context.ServiceCatalog.GetService("object-store").Url;
+//                if (((ObjectStoragePSDriveInfo)this.Drive).SharePath == null)
+//                    return this.Context.ServiceCatalog.GetPublicEndpoint("Object Storage", String.Empty);
 //                else
 //                    //return ((OSDriveInfo)this.Drive).SharePath;
-//                    return ((OSDriveInfo)this.Drive).SharePath.Replace(this.Drive.Name, string.Empty);
+//                    return ((ObjectStoragePSDriveInfo)this.Drive).SharePath.Replace(this.Drive.Name, string.Empty);
 //            }
 //        }
 //        #endregion
@@ -191,24 +192,42 @@
 ///// <param name="sender"></param>
 ///// <param name="e"></param>
 ////=========================================================================================
-//        private void ListChanged(object sender, CopyOperationInfoEventArgs e)
+//        //private void ListChanged(object sender, CopyOperationInfoEventArgs e)
+//        //{
+//        //    //if (e.ExceptionMessage == null)
+//        //    //{
+//        //    //    if (e.Filename != null || e.Filename != string.Empty)
+//        //    //    {
+//        //    //        Console.WriteLine("Copying file " + e.Filename);
+//        //    //        _bytesCopied = _bytesCopied + e.BytesCopied;
+//        //    //        ++_filesCopied;
+//        //    //        _totalBytesCopied = _totalBytesCopied + e.BytesCopied;
+//        //    //        ++_totalFilesCopied;
+//        //    //    }
+//        //    //}
+//        //    //else
+//        //    //{
+//        //    //    Console.ForegroundColor = ConsoleColor.Red;
+//        //    //    Console.WriteLine("Error : " + e.ExceptionMessage);
+//        //    //    Console.ForegroundColor = ConsoleColor.Green;
+//        //    //}
+//        //}
+////================================================================================
+///// <summary>
+///// 
+///// </summary>
+///// <param name="path"></param>
+///// <returns></returns>
+////================================================================================
+//        private FileStream GetFileStream(StoragePath path)
 //        {
-//            if (e.ExceptionMessage == null)
+//            if (!path.Volume.EndsWith(@"\") && !path.Path.StartsWith(@"\"))
 //            {
-//                if (e.Filename != null || e.Filename != string.Empty)
-//                {
-//                    Console.WriteLine("Copying file " + e.Filename);
-//                    _bytesCopied = _bytesCopied + e.BytesCopied;
-//                    ++_filesCopied;
-//                    _totalBytesCopied = _totalBytesCopied + e.BytesCopied;
-//                    ++_totalFilesCopied;
-//                }
+//                return new FileStream(path.Volume + @"\" + path.Path, FileMode.Open);
 //            }
 //            else
 //            {
-//                Console.ForegroundColor = ConsoleColor.Red;
-//                Console.WriteLine("Error : " + e.ExceptionMessage);
-//                Console.ForegroundColor = ConsoleColor.Green;
+//                return new FileStream(path.Volume + path.Path, FileMode.Open);
 //            }
 //        }
 ////=================================================================================================
@@ -218,32 +237,44 @@
 ////=================================================================================================
 //        private void ProcessNonQueuedCopy()
 //        {
-//            StoragePath sourcePath = this.CreateStoragePath(this.SourcePath);
-//            StoragePath targetPath = this.CreateValidTargetPath(sourcePath, this.TargetPath);
-//            IStorageObjectRepository repository = this.RepositoryFactory.CreateStorageObjectRepository();
+//            StoragePath sourcePath        = this.CreateStoragePath(this.SourcePath);
+//            StoragePath targetPath        = this.CreateValidTargetPath(sourcePath, this.TargetPath);
+//            IStorageServiceClient service = this.CoreClient.CreateServiceClient<IStorageServiceClient>();
+//            string containerName          = Path.GetFileNameWithoutExtension(this.SourcePath);
 
 
-//            if (sourcePath.PathType == OpenStack.Common.PathType.Local && targetPath.PathType == OpenStack.Common.PathType.Remote)
-//            {
-//                long lastSegment = repository.GetLastSegmentId(targetPath);
-//                if (lastSegment != 0)
-//                {
-//                    Console.WriteLine("");
-//                    Console.WriteLine(" You've already uploaded a portion of this file.");
-//                    Console.WriteLine(" Would you like to resume your previous upload? [Y/N]");
-//                    ConsoleKeyInfo response = Console.ReadKey();
-//                    if (response.Key != ConsoleKey.Y)
-//                    {
-//                        repository.DeleteStorageObject(targetPath.AbsoluteURI + @"_temp\");
-//                    }
-//                }
+//            if (sourcePath.PathType == PathType.Local && targetPath.PathType == PathType.Remote) {
+//                service.CreateStorageObject(containerName, targetPath.ResourcePath, null, this.GetFileStream(sourcePath));
 //            }
 
-//            ((StorageObjectRepository)repository).Changed += new StorageObjectRepository.CopyOperationCompleteEventHandler(ListChanged);
-//            Console.WriteLine("");
-//            repository.Copy(sourcePath.AbsoluteURI, targetPath.AbsoluteURI, true);
-//            this.PrintTotals();
-//            ((StorageObjectRepository)repository).Changed -= new StorageObjectRepository.CopyOperationCompleteEventHandler(ListChanged);
+
+
+//            //StoragePath sourcePath = this.CreateStoragePath(this.SourcePath);
+//            //StoragePath targetPath = this.CreateValidTargetPath(sourcePath, this.TargetPath);
+//            //IStorageObjectRepository repository = this.RepositoryFactory.CreateStorageObjectRepository();
+
+
+//            //if (sourcePath.PathType == OpenStack.Common.PathType.Local && targetPath.PathType == OpenStack.Common.PathType.Remote)
+//            //{
+//            //    long lastSegment = repository.GetLastSegmentId(targetPath);
+//            //    if (lastSegment != 0)
+//            //    {
+//            //        Console.WriteLine("");
+//            //        Console.WriteLine(" You've already uploaded a portion of this file.");
+//            //        Console.WriteLine(" Would you like to resume your previous upload? [Y/N]");
+//            //        ConsoleKeyInfo response = Console.ReadKey();
+//            //        if (response.Key != ConsoleKey.Y)
+//            //        {
+//            //            repository.DeleteStorageObject(targetPath.AbsoluteURI + @"_temp\");
+//            //        }
+//            //    }
+//            //}
+
+//            //((StorageObjectRepository)repository).Changed += new StorageObjectRepository.CopyOperationCompleteEventHandler(ListChanged);
+//            //Console.WriteLine("");
+//            //repository.Copy(sourcePath.AbsoluteURI, targetPath.AbsoluteURI, true);
+//            //this.PrintTotals();
+//            //((StorageObjectRepository)repository).Changed -= new StorageObjectRepository.CopyOperationCompleteEventHandler(ListChanged);
 //        }
 ////=========================================================================================
 ///// <summary>
@@ -252,7 +283,7 @@
 ////=========================================================================================
 //        protected override void ProcessRecord()
 //        {
-//            OSDriveInfo drive = this.SessionState.Drive.Current as OSDriveInfo;
+//            ObjectStoragePSDriveInfo drive = this.SessionState.Drive.Current as ObjectStoragePSDriveInfo;
 //            this.ProcessNonQueuedCopy();
 //        }
 //        #endregion

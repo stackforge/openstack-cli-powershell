@@ -17,22 +17,12 @@ Echo ''
 $a.ForegroundColor = "gray"
 Echo '========================================================================================'
 $a.ForegroundColor = "yellow"
-Echo 'Welcome to the OpenStack Powershell Environment.'
+Echo 'Welcome to the OpenStack Powershell Environment.11'
 $a.ForegroundColor = "gray"
 Echo '========================================================================================'
 Echo ''
 $a.ForegroundColor = "green"
 echo '   ==> Registering Providers...'
-
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------
-# ACTION REQUIRED! ==> Substitute the example CD commands path below to match your setup. This should be the final output of the Solution as dictated by the
-#  $(TargetDir) macro in the Post-Build Script.
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
 
 #Save the current value in the $p variable.
 $p = [Environment]::GetEnvironmentVariable("PSModulePath")
@@ -43,32 +33,9 @@ $p += ";C:\Users\tplummer\Documents\WindowsPowerShell\Modules\OpenStack\"
 #Add the paths in $p to the PSModulePath value.
 [Environment]::SetEnvironmentVariable("PSModulePath",$p)
 
-
-
-
-
-
-
-
-
-
-
- #cd C:\Users\tplummer\Source\Repos\OpenStack-CLI\OpenStack.Client.Powershell\bin\Release
- #cd C:\Users\tplummer\Source\Repos\OpenStack-NewCLI\OpenStack.Client.Powershell\bin\Release
- #import-module .\CLIManifest.psd1 -DisableNameChecking
-
- import-module OpenStack-Core -DisableNameChecking
-
+import-module Openstack-Core -DisableNameChecking
 
 cd Builds:
-cd 1-3-4-5
-
-#set-sp Rackspace
-
-
-#cd OpenStack:
-#cd Networks
-#get-sp
 
 # ---------------------------------------------------------------
 # Let the User know what's going on..

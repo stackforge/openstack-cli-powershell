@@ -17,7 +17,6 @@ using System;
 using System.Management.Automation;
 using OpenStack.Client.Powershell.Cmdlets.Common;
 using System.Reflection;
-using OpenStack.Client.Powershell.Providers.Common;
 
 namespace OpenStack.Client.Powershell.Cmdlets.GroupManagement
 {

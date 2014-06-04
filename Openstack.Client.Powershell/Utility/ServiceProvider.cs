@@ -18,9 +18,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Openstack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Utility
 {
+
+
+    public class ServiceMaps : List<ServiceMap>
+    {
+
+        //public string TranslateServiceName(string serviceContract)
+        //{
+        //    return this.Where(n => n.Source == serviceContract).Single().Target;
+        //}
+
+        public string TranslateServiceName(CoreServices service)
+        {
+            return this.Where(n => n.Source == service.ToString()).Single().Target;
+        }
+    }
+
+
     public class ServiceProvider 
     {
         private string _name;
@@ -30,6 +48,20 @@ namespace OpenStack.Client.Powershell.Utility
         private bool _isDirty = false;
         private List<CredentialElement> _credentialElements = new List<CredentialElement>();
         private string _configFilePath;
+        private IEnumerable<AvailabilityZone> _availabilityZones;
+        private ServiceMaps _serviceMaps;
+
+        public ServiceMaps ServiceMaps
+        {
+            get { return _serviceMaps; }
+            set { _serviceMaps = value; }
+        }
+
+        public IEnumerable<AvailabilityZone> AvailabilityZones
+        {
+            get { return _availabilityZones; }
+            set { _availabilityZones = value; }
+        }
 
         public string ConfigFilePath
         {

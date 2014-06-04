@@ -31,8 +31,6 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
     //[RequiredServiceIdentifierAttribute(OpenStack.Objects.Domain.Admin.Services.ObjectStorage)]
     public class GetServiceProvidersCmdlet : BasePSCmdlet
     {       
-        #region Parameters
-        #endregion
         #region Methods
 
 //=========================================================================================
@@ -42,8 +40,12 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
 //=========================================================================================
         protected override void ProcessRecord()
         {
-            ConfigurationManager manager = new ConfigurationManager();
+            var manager = new ConfigurationManager();
             manager.Load();
+            
+            this.WriteObject("");
+            this.WriteObject("Current Service Provider : " + this.Context.CurrentServiceProvider.Name);
+            this.WriteObject("-----------------------------------------");
             this.WriteObject(manager.GetServiceProviders());
         }
         #endregion

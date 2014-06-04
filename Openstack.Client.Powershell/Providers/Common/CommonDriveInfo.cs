@@ -16,8 +16,6 @@ limitations under the License.
 using System.Collections;
 using System.Collections.Generic;
 using System.Management.Automation;
-using Openstack.Objects.DataAccess;
-using Openstack.Common.DataAccess;
 using Openstack.Client.Powershell.Providers.Common;
 
 namespace Openstack.Client.Powershell.Providers.Common
@@ -25,61 +23,62 @@ namespace Openstack.Client.Powershell.Providers.Common
     public class CommonDriveInfo : PSDriveInfo
     {
         private CommonDriveParameters _parameters = null;
-        private BaseUIContainer _currentContainer = null;
+        //private BaseUIContainer _currentContainer = null;
 
         #region Ctors
-//==================================================================================================
-/// <summary>
-/// 
-/// </summary>
-/// <param name="driveInfo"></param>
-//==================================================================================================
-        public CommonDriveInfo(PSDriveInfo driveInfo, CommonDriveParameters parameters) : base (driveInfo)
+        //==================================================================================================
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="driveInfo"></param>
+        //==================================================================================================
+        public CommonDriveInfo(PSDriveInfo driveInfo, CommonDriveParameters parameters)
+            : base(driveInfo)
         {
             _parameters = parameters;
         }
         #endregion
         #region Methods
-//==================================================================================================
-/// <summary>
-/// 
-/// </summary>
-/// <returns></returns>
-//==================================================================================================
+        //==================================================================================================
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //==================================================================================================
         public Hashtable GetParameters()
         {
             return null;
         }
         #endregion
         #region Properties
-//==================================================================================================
-/// <summary>
-/// 
-/// </summary>
-//==================================================================================================
-        public BaseUIContainer CurrentTenant
-        {
-            get { return _currentContainer; }
-            set
-            {
-                _currentContainer = value;
-                this.CurrentLocation = _currentContainer.Path;
-            }
-        }
-//==================================================================================================
-/// <summary>
-/// 
-/// </summary>
-//==================================================================================================
-        public BaseUIContainer CurrentContainer
-        {
-            get { return _currentContainer; }
-            set
-            {
-                _currentContainer = value;
-                this.CurrentLocation = _currentContainer.Path;
-            }
-        }
+        //==================================================================================================
+        /// <summary>
+        /// 
+        /// </summary>
+        //==================================================================================================
+        //public BaseUIContainer CurrentTenant
+        //{
+        //    get { return _currentContainer; }
+        //    set
+        //    {
+        //        _currentContainer = value;
+        //        this.CurrentLocation = _currentContainer.Path;
+        //    }
+        //}
+        //==================================================================================================
+        /// <summary>
+        /// 
+        /// </summary>
+        //==================================================================================================
+        //public BaseUIContainer CurrentContainer
+        //{
+        //    get { return _currentContainer; }
+        //    set
+        //    {
+        //        _currentContainer = value;
+        //        this.CurrentLocation = _currentContainer.Path;
+        //    }
+        //}
         #endregion
     }
 }
