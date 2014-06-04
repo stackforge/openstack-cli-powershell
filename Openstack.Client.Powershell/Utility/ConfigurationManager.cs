@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using System.Collections;
 using System.IO;
 using System.Xml.XPath;
+using Openstack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Utility
 {
@@ -161,6 +162,36 @@ namespace OpenStack.Client.Powershell.Utility
                 throw new InvalidOperationException("Unable to locate OpenStack.config file.");
             }
         }
+//=========================================================================================
+/// <summary>
+/// 
+/// </summary>
+/// <param name="serviceProviderNode"></param>
+/// <returns></returns>
+//=========================================================================================
+        private IEnumerable<AvailabilityZone> GetAvailabilityZones(XElement serviceProviderNode)
+        {
+            List<AvailabilityZone> zones = new List<AvailabilityZone>();
+
+            if (serviceProviderNode.HasElements && serviceProviderNode.Element("AvailabilityZones") != null && serviceProviderNode.Element("AvailabilityZones").Descendants().Count() > 0)
+            {
+                foreach (XElement az in serviceProviderNode.Element("AvailabilityZones").Descendants()) {
+
+                    AvailabilityZone zone     = new AvailabilityZone();
+                    zone.Name                 = az.Attribute("name").Value;
+                    zone.ShellForegroundColor = az.Attribute("shellForegroundColor").Value;
+                    zone.IsDefault            = Convert.ToBoolean(az.Attribute("isDefault").Value);
+                    zone.Id                   = az.Attribute("id").Value;
+                    zones.Add(zone);
+                }
+
+                return zones;
+            }
+            else
+            {
+                return null;
+            }
+        }
  //=========================================================================================
 /// <summary>
 /// 
@@ -176,39 +207,44 @@ namespace OpenStack.Client.Powershell.Utility
             var provider                     = new ServiceProvider();        
             provider.Name                    = serviceProviderNode.Attribute("name").Value;
             provider.IsDefault               = Convert.ToBoolean(serviceProviderNode.Attribute("isDefault").Value);
+            provider.AvailabilityZones       = this.GetAvailabilityZones(serviceProviderNode);
 
             // The ServiceProvider in the Primary config file is pointing to a Vender specific config so reolve that first..
 
             foreach (XElement xElement in serviceProviderNode.Elements())
-            {               
-                CredentialElement element = new CredentialElement();
-                element.Key               = xElement.Attribute("key").Value;
-                element.Value             = xElement.Attribute("value").Value;
-
-                 if (xElement.Attribute("key").Value == "AuthenticationServiceURI")               
-                    provider.AuthenticationServiceURI = xElement.Attribute("value").Value;                   
-               
-                if (xElement.Attribute("key").Value == "isDefault")              
-                    provider.IsDefault = Convert.ToBoolean(xElement.Attribute("value").Value);
-             
-                try
+            {
+                if (xElement.Name == "add")
                 {
-                    element.IsMandatory = Convert.ToBoolean(xElement.Attribute("isMandatory").Value);
-                    element.DisplayName = xElement.Attribute("displayName").Value;
-                    //element.HelpText          = xElement.Attribute("helpText").Value;
-                }
-                catch (Exception) { }
+                    CredentialElement element = new CredentialElement();
+                    element.Key               = xElement.Attribute("key").Value;
+                    element.Value             = xElement.Attribute("value").Value;
 
-                if (element.Key == "ConfigFilePath")
-                {  
-                    provider.CredentialElements.Add(element);
-                    ServiceProvider resolvedProvider = this.ResolveServiceProviderCredentials(provider);
-                    resolvedProvider.ConfigFilePath = element.Value;
-                    return resolvedProvider;
+                    if (xElement.Attribute("key").Value == "AuthenticationServiceURI")
+                        provider.AuthenticationServiceURI = xElement.Attribute("value").Value;
+
+                    if (xElement.Attribute("key").Value == "isDefault")
+                        provider.IsDefault = Convert.ToBoolean(xElement.Attribute("value").Value);
+
+                    try
+                    {
+                        element.IsMandatory = Convert.ToBoolean(xElement.Attribute("isMandatory").Value);
+                        element.DisplayName = xElement.Attribute("displayName").Value;
+                        //element.HelpText          = xElement.Attribute("helpText").Value;
+                    }
+                    catch (Exception) { }
+
+                    if (element.Key == "ConfigFilePath")
+                    {
+                        provider.CredentialElements.Add(element);
+                        ServiceProvider resolvedProvider = this.ResolveServiceProviderCredentials(provider);
+                        resolvedProvider.ConfigFilePath = element.Value;
+                        return resolvedProvider;
+                    }
+                    else
+                        provider.CredentialElements.Add(element);
                 }
-                else
-                    provider.CredentialElements.Add(element);
-            }
+            }           
+           
             return provider;
         }
 //=========================================================================================
@@ -261,6 +297,18 @@ namespace OpenStack.Client.Powershell.Utility
             }
             catch (Exception) { }
         }
+        ////=========================================================================================
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ////=========================================================================================
+        //private void WriteAvailabilityZones()
+        //{
+        //    IEnumerable<XElement> serviceProviderNodes = this.Document.Descendants("ServiceProvider");
+        //    XElement spElement = new XElement("ServiceProvider",
+        //                                                              new XAttribute("name", serviceProvider.Name),
+        //                                                              new XAttribute("isDefault", serviceProvider.IsDefault));
+        //}
 //=========================================================================================
 /// <summary>
 /// Flush and fill style..
@@ -268,6 +316,14 @@ namespace OpenStack.Client.Powershell.Utility
 //=========================================================================================
         public void WriteServiceProvider(ServiceProvider serviceProvider, bool removeInitialServiceProvider = false)
         {
+            XElement oldServiceProvider = null;
+
+            if (serviceProvider.ConfigFilePath != null)
+                this.Load(serviceProvider.ConfigFilePath);
+            else
+                this.Load();
+            
+            XElement availabilityZones = null;
             IEnumerable<XElement> serviceProviderNodes = this.Document.Descendants("ServiceProvider");
             XElement spElement                         = new XElement("ServiceProvider", 
                                                                       new XAttribute("name", serviceProvider.Name), 
@@ -277,13 +333,36 @@ namespace OpenStack.Client.Powershell.Utility
 
             try
             {
-                XElement oldServiceProvider = this.Document.Descendants("ServiceProvider").Where(sp => sp.Attribute("name").Value == serviceProvider.Name).Single();
+                if (this.Document.Descendants("ServiceProvider").Where(sp => sp.Attribute("name").Value == serviceProvider.Name).Count() > 0)
+                {
+                    oldServiceProvider = this.Document.Descendants("ServiceProvider").Where(sp => sp.Attribute("name").Value == serviceProvider.Name).Single();
+                }
+                else
+                {
+                    oldServiceProvider = this.Document.Descendants("ServiceProvider").Where(sp => sp.Attribute("name").Value == String.Empty).Single();
+                }
+
+
+              
+
+                //if (serviceProvider.Name == "Default")  {
+                //    oldServiceProvider = this.Document.Descendants("ServiceProvider").Where(sp => sp.Attribute("name").Value == String.Empty).Single();
+                //}
+                //else
+                //{
+                //    oldServiceProvider = this.Document.Descendants("ServiceProvider").Where(sp => sp.Attribute("name").Value == serviceProvider.Name).Single();
+                //}
+                
+                
+                
+                availabilityZones = oldServiceProvider.Element("AvailabilityZones");
+                
+
                 if (oldServiceProvider != null)
                     oldServiceProvider.Remove();
             }
             catch (InvalidOperationException ex) { }
-           
-            
+                       
             // If this new Provider is set = default, remove the default flag from the previous one..
 
             if (serviceProvider.IsDefault) {
@@ -291,7 +370,10 @@ namespace OpenStack.Client.Powershell.Utility
             }
             
             // Create CredentialElement instances for all Key\Value (Add elements).. 
-            
+
+            spElement.Add(availabilityZones);
+
+
             foreach (CredentialElement element in serviceProvider.CredentialElements) {
                 spElement.Add(this.CreateAddElement(element));
             }
@@ -299,8 +381,14 @@ namespace OpenStack.Client.Powershell.Utility
             if (removeInitialServiceProvider == true)
                 this.RemoveInitialServiceProvider(ref _document);
 
-            this.Document.XPathSelectElement("configuration/appSettings/IdentityServices").Add(spElement);
-            this.Document.Save(this.GetFullConfigPath());
-       }
+            if (this.Document != null)
+            {
+                this.Document.XPathSelectElement("configuration/appSettings/IdentityServices").Add(spElement);
+                if (serviceProvider.ConfigFilePath == null)
+                   this.Document.Save(this.GetFullConfigPath());
+                else
+                    this.Document.Save(serviceProvider.ConfigFilePath);
+            }
+        }
     }
 }

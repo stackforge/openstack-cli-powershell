@@ -4,12 +4,13 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using Openstack.Client.Powershell.Utility;
 using OpenStack.Client.Powershell.Utility;
 using OpenStack.Identity;
 
 namespace Rackspace.Client.Powershell.Utility
 {
-  
+    [ServiceProviderAttribute("Rackspace")]
     public class RackspaceRegistrationManager : RegistrationManager
     {
         public override RegistrationResponse Register(ServiceProvider serviceProvider)

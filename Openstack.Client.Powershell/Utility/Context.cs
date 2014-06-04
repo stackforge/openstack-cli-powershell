@@ -29,7 +29,10 @@ namespace OpenStack.Client.Powershell.Utility
         private string _productName = "OpenstackDotNetAPI";
         private string _version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         private string _forecolor = "Green";
-        
+        private string _currentRegion;
+        private ServiceProvider _currentServiceProvider;
+       
+
         #region Ctors
         //==================================================================================================
         /// <summary>
@@ -42,6 +45,26 @@ namespace OpenStack.Client.Powershell.Utility
         }
         #endregion
         #region Properties
+        //==================================================================================================
+        /// <summary>
+        /// 
+        /// </summary>
+        //==================================================================================================
+        public ServiceProvider CurrentServiceProvider
+        {
+            get { return _currentServiceProvider; }
+            set { _currentServiceProvider = value; }
+        }
+        //==================================================================================================
+        /// <summary>
+        /// 
+        /// </summary>
+        //==================================================================================================
+        public string CurrentRegion
+        {
+            get { return _currentRegion; }
+            set { _currentRegion = value; }
+        }
         //==================================================================================================
         /// <summary>
         /// 

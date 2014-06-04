@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Openstack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Utility
 {
@@ -30,6 +31,13 @@ namespace OpenStack.Client.Powershell.Utility
         private bool _isDirty = false;
         private List<CredentialElement> _credentialElements = new List<CredentialElement>();
         private string _configFilePath;
+        private IEnumerable<AvailabilityZone> _availabilityZones;
+
+        public IEnumerable<AvailabilityZone> AvailabilityZones
+        {
+            get { return _availabilityZones; }
+            set { _availabilityZones = value; }
+        }
 
         public string ConfigFilePath
         {

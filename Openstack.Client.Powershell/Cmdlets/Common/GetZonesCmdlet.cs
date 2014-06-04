@@ -21,74 +21,68 @@ using OpenStack.Client.Powershell.Cmdlets.Common;
 using System.Management.Automation;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Openstack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
     [Cmdlet("Get", "Zones", SupportsShouldProcess = true)]
     public class GetZonesCmdlet : BasePSCmdlet
     {
-        private SwitchParameter _verbose = true;
+        //private SwitchParameter _verbose = true;
 
 //=========================================================================================
 /// <summary>
 /// 
 /// </summary>
 //=========================================================================================
-        [Parameter(Mandatory = false, ParameterSetName = "gc0", ValueFromPipelineByPropertyName = true, HelpMessage = "Prints extended information for each service.")]
-        [Alias("v")]
-        [ValidateNotNullOrEmpty]
-        public SwitchParameter Verbose2
-        {
-            get { return _verbose; }
-            set { _verbose = value; }
-        }
+        //[Parameter(Mandatory = false, ParameterSetName = "gz", ValueFromPipelineByPropertyName = true, HelpMessage = "Prints extended information for each service.")]
+        //[Alias("v")]
+        //[ValidateNotNullOrEmpty]
+        //public SwitchParameter Verbose
+        //{
+        //    get { return _verbose; }
+        //    set { _verbose = value; }
+        //}
 //=========================================================================================
 /// <summary>
 /// 
 /// </summary>
 //=========================================================================================
-        private void ShowVerboseOutput(IEnumerable<XElement> zoneKeyNode)
+        private void ShowVerboseOutput()
         {
-            foreach (XElement element in zoneKeyNode)
+            foreach (AvailabilityZone zone in this.Context.CurrentServiceProvider.AvailabilityZones)
             {
-                this.WriteHeaderSection("Zone : " + element.Attribute("name").Value);
-                Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), this.Context.Forecolor);
-                Console.WriteLine("Zone Id                : " + element.Attribute("id").Value);
-                Console.WriteLine("Zone Name              : " + element.Attribute("name").Value);
-                Console.WriteLine("Shell Foreground Color : " + element.Attribute("shellForegroundColor").Value);
+                this.WriteHeaderSection("Zone : " + zone.Name);
+                Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), zone.ShellForegroundColor);
+                Console.WriteLine("Zone Id                : " + zone.Id);
+                Console.WriteLine("Zone Name              : " + zone.Name);
+                Console.WriteLine("Shell Foreground Color : " + zone.ShellForegroundColor);
                 Console.WriteLine("");
                 Console.WriteLine("The following Services are available from this Availability Zone");
                 Console.WriteLine("----------------------------------------------------------------");
-                this.WriteObject(this.Context.ServiceCatalog.GetServicesInAvailabilityZone(element.Attribute("name").Value));
+                
+                this.WriteObject(this.Context.ServiceCatalog.GetServicesInAvailabilityZone(zone.Name));
                 Console.WriteLine("");
             }
-            Console.WriteLine("");
+            Console.WriteLine("");         
         }
 //=========================================================================================
 /// <summary>
 /// 
 /// </summary>
 //=========================================================================================
-        private void ShowNonVerboseOutput(IEnumerable<XElement> zoneKeyNode)
+        private void ShowNonVerboseOutput()
         {
-            //Console.WriteLine("");
-            //Console.WriteLine("Current Availability Zones include ");
-            //Console.WriteLine("");
-            //foreach (XElement element in zoneKeyNode)
-            //{
-            //    Zone zone                 = new Zone();
-            //    zone.Name                 = element.Attribute("name").Value;
-            //    zone.ShellForegroundColor = element.Attribute("shellForegroundColor").Value;
-            //    zone.Id                   = element.Attribute("id").Value;
-
-            //    if (element.Attribute("isDefault").Value == "True")
-            //        zone.IsDefault = true;
-            //    else
-            //        zone.IsDefault = false;
-
-            //    this.WriteObject(zone);
-            //}
-            //Console.WriteLine("");
+             foreach (AvailabilityZone zone in this.Context.CurrentServiceProvider.AvailabilityZones)
+            {
+                this.WriteHeaderSection("Zone : " + zone.Name);
+                Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), zone.ShellForegroundColor);
+                Console.WriteLine("Zone Id                : " + zone.Id);
+                Console.WriteLine("Zone Name              : " + zone.Name);
+                Console.WriteLine("Shell Foreground Color : " + zone.ShellForegroundColor);
+                Console.WriteLine("");              
+            }
+            Console.WriteLine("");       
         }
 //=========================================================================================
 /// <summary>
@@ -97,18 +91,16 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
 //=========================================================================================
         protected override void ProcessRecord()
         {
-            string configFilePath             = this.ConfigFilePath; ;
-            XDocument doc                     = XDocument.Load(configFilePath);
-            IEnumerable<XElement> zoneKeyNode = doc.Descendants("AvailabilityZone");
+            this.ShowVerboseOutput();
 
-            if (_verbose)
-            {
-                this.ShowVerboseOutput(zoneKeyNode);
-            }
-            else
-            {
-                this.ShowNonVerboseOutput(zoneKeyNode);                
-            }
+            //if (_verbose)
+            //{
+            //    this.ShowVerboseOutput();
+            //}
+            //else
+            //{
+            //    this.ShowNonVerboseOutput();
+            //}
         }
     }
 }

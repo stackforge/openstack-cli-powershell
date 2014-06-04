@@ -1,4 +1,5 @@
-﻿/* ============================================================================
+﻿
+/* ============================================================================
 Copyright 2014 Hewlett Packard
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,40 +17,30 @@ limitations under the License.
 using System;
 using System.Management.Automation;
 using System.Management.Automation.Provider;
-using Openstack.Objects.DataAccess;
-using Openstack.Common.Properties;
-using System.Xml.Serialization;
-using System.Xml;
-using System.IO;
-using System.Text;
-using System.Runtime.Serialization.Json;
-using Openstack.Client.Powershell.Providers.Storage;
-using Openstack.Objects.Utility;
-using Openstack.Objects.Domain.Admin;
-using Openstack.Objects.DataAccess.Security;
-using System.Reflection;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using OpenStack.Client.Powershell.Utility;
+using System.Linq;
+using Openstack.Client.Powershell.Utility;
 
-namespace Openstack.Client.Powershell.Providers.Common
+namespace OpenStack.Client.Powershell.Providers.Common
 {
     public class BaseNavigationCmdletProvider : NavigationCmdletProvider  
     {
-        static BaseRepositoryFactory _repositoryFactory;
 //=========================================================================================
 /// <summary>
 /// 
 /// </summary>
 //=========================================================================================
-        protected BaseRepositoryFactory RepositoryFactory
+        protected OpenStackClient Client
         {
             get
             {
-                return (BaseRepositoryFactory)this.SessionState.PSVariable.Get("BaseRepositoryFactory").Value;
+                return (OpenStackClient)this.SessionState.PSVariable.Get("CoreClient").Value;
             }
             set
             {
-                this.SessionState.PSVariable.Set(new PSVariable("BaseRepositoryFactory", value));
+                this.SessionState.PSVariable.Set(new PSVariable("CoreClient", value));
             }
         }
 //=========================================================================================
@@ -109,7 +100,7 @@ namespace Openstack.Client.Powershell.Providers.Common
                 }
                 catch (Exception)
                 {
-                    return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\CLI.config";
+                    return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\" + @"OS\OpenStack.config";
                 }
             }
         }
@@ -118,14 +109,12 @@ namespace Openstack.Client.Powershell.Providers.Common
 /// 
 /// </summary>
 //==================================================================================================
-        private void SetZoneColor()
+        private void SetZoneColor(ServiceProvider provider)
         {
-            string configFilePath              = this.ConfigFilePath;
-            XDocument doc                      = XDocument.Load(configFilePath);
-            XElement defaultZoneNode           = doc.XPathSelectElement("//AvailabilityZone[@isDefault='True']");
-            Console.ForegroundColor            = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), defaultZoneNode.Attribute("shellForegroundColor").Value);
-            this.Host.UI.RawUI.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), defaultZoneNode.Attribute("shellForegroundColor").Value);
-            this.Context.Forecolor             = defaultZoneNode.Attribute("shellForegroundColor").Value;
+            AvailabilityZone defZone           = provider.AvailabilityZones.Where(z => z.IsDefault == true).SingleOrDefault();    
+            Console.ForegroundColor            = (ConsoleColor)Enum.Parse(typeof(ConsoleColor),  defZone.ShellForegroundColor);
+            this.Host.UI.RawUI.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor),  defZone.ShellForegroundColor);
+            this.Context.Forecolor             = defZone.ShellForegroundColor;
         }
 //==================================================================================================
 /// <summary>
@@ -134,35 +123,28 @@ namespace Openstack.Client.Powershell.Providers.Common
 //==================================================================================================
         protected void InitializeSession()
         {
-            if (!IsContextInitialized())
+            ConfigurationManager configManager = new ConfigurationManager();
+            ExtensionManager loader            = new ExtensionManager(this.SessionState, this.Context);
+            configManager.Load();
+
+            ServiceProvider provider = configManager.GetDefaultServiceProvider();           
+
+            if (provider.Name == String.Empty && provider.IsDefault == true)
             {
-                Context context               = new Context();
-                CredentialManager manager     = new CredentialManager(false);
-                AuthenticationRequest request = manager.BuildAuthenticationRequest();
+                // Technically Core is already loaded (you're in it :) but this signs in for you to the ServiceProvider selected..
+                // This is just used in the case where it's the Users first time loading the CLI..
 
-                if (request != null)
-                {
-                    KeystoneAuthProvider authProvider = new KeystoneAuthProvider();
-                    AuthenticationResponse response   = authProvider.Authenticate(request);
-
-                    context.ServiceCatalog    = response.ServiceCatalog;
-                    context.Settings          = Settings.Default;
-       
-                    context.AccessToken       = response.Token;
-                    context.ProductName       = "Openstack-WinCLI";
-                    context.Version           = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-                    this.SessionState.PSVariable.Set(new PSVariable("Context", context));
-                    this.SessionState.PSVariable.Set(new PSVariable("BaseRepositoryFactory", new BaseRepositoryFactory(context)));
-                    this.SetZoneColor();
-
-                    string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                    //string currentVersion = "1.4.0.0";
-                    UpdateManager updateManager = new UpdateManager(this.Context, currentVersion, this.RepositoryFactory);
-                    updateManager.ProcessUpdateCheck();
-                }
+                loader.LoadCore(provider);
             }
-        }
+            else
+            {
+                // Load any extensions that were supplied by the ServiceProvider...
+
+                loader.LoadExtension(provider);
+            }
+
+            this.SetZoneColor(provider);            
+      }
         #region Implementation of DriveCmdletProvider    
 //==================================================================================================
 /// <summary>
@@ -173,57 +155,6 @@ namespace Openstack.Client.Powershell.Providers.Common
         protected override void ClearItem(string path)
         {
             base.ClearItem(path);
-        }
-//==================================================================================================
-/// <summary>
-/// 
-/// </summary>
-/// <typeparam name="T"></typeparam>
-/// <param name="graph"></param>
-/// <param name="path"></param>
-//==================================================================================================
-        protected void WriteJSON<T> (T graph, string path)
-        {
-            MemoryStream stream            = new MemoryStream();
-            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(T));
-            ser.WriteObject(stream, graph);
-
-            string retValue = Encoding.Default.GetString(stream.ToArray());
-            WriteItemObject(retValue, path, false);
-            WriteItemObject("", path, false);         
-        }
-//==================================================================================================
-/// <summary>
-/// Writes out the files represented as StorageObjects for the supplied path.
-/// </summary>
-//==================================================================================================
-        protected void WriteXML<T>(T graph, string path)
-        {
-            XmlTextWriter xtw        = null;
-            MemoryStream stream      = new MemoryStream();
-            StringBuilder builder    = new StringBuilder();
-            XmlDocument document     = new XmlDocument();
-            StringWriter writer      = null;
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-
-            try
-            {
-                serializer.Serialize(stream, graph);
-                stream.Position = 0;
-                document.Load(stream);
-
-                writer         = new StringWriter(builder);
-                xtw            = new XmlTextWriter(writer);
-                xtw.Formatting = Formatting.Indented;
-
-                document.WriteTo(xtw);
-            }
-            finally
-            {
-                xtw.Close();
-            }
-            WriteItemObject(builder.ToString(), path, false);
-            WriteItemObject("", path, false);
         }
 //==================================================================================================
 /// <summary>
@@ -274,30 +205,7 @@ namespace Openstack.Client.Powershell.Providers.Common
         {         
             return true;
         }
-        #endregion
-//==================================================================================================
-/// <summary>
-/// 
-/// </summary>
-//==================================================================================================
-        protected ResponseFormat ResponseFormat
-        {
-            get
-            {
-                try
-                {
-                    return (ResponseFormat)this.SessionState.PSVariable.Get("ResponseFormat").Value;
-                }
-                catch (Exception)
-                {
-                    PSVariable variable = new PSVariable("ResponseFormat");
-                    variable.Value = ResponseFormat.data;
-
-                    this.SessionState.PSVariable.Set(variable);
-                    return ResponseFormat.data;
-                }
-            }
-        }      
+        #endregion    
 //==================================================================================================
 /// <summary>
 /// This test should not verify the existance of the item at the path. 

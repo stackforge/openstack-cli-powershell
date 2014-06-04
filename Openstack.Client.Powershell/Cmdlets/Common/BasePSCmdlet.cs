@@ -301,10 +301,10 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
         /// </summary>
         /// <param name="path"></param>
         //=========================================================================================
-        //protected StoragePath CreateStoragePath(string path)
-        //{
-        //    return ((OSDriveInfo)this.Drive).CreateStoragePath(path);
-        //}
+        protected StoragePath CreateStoragePath(string path)
+        {
+            return ((ObjectStoragePSDriveInfo)this.Drive).CreateStoragePath(path);
+        }
         #endregion
     }
 }

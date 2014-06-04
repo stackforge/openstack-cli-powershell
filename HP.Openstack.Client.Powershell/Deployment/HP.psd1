@@ -8,7 +8,7 @@ ModuleVersion="1.0.0.0"
 PowerShellVersion="2.0"
 CLRVersion="4.0.30319"
 FileList=''
-RequiredAssemblies =  'OpenStack.dll', 'OpenStack.Common.dll'
+RequiredAssemblies =  'OpenStack.dll' 
 
 }
 

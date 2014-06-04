@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Documents\WindowsPowerShell\Modules\Openstack\Openstack-Core\</OutputPath>
+    <OutputPath>..\..\..\..\..\Documents\WindowsPowerShell\Modules\Openstack\Openstack-Core\</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -64,7 +64,11 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenStack, Version=0.9.0.0, Culture=neutral, PublicKeyToken=baf191d8aca7391c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OpenStack-SDK-DotNet.0.9.0.0\lib\net40\OpenStack.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -75,7 +79,14 @@
     <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.22\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.22\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
@@ -90,7 +101,6 @@
     <Reference Include="XamlBuildTask" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseNavigationCmdletProvider.cs" />
     <Compile Include="Cmdlets\BasePSCmdlet.cs" />
     <Compile Include="Cmdlets\Common\BaseAuthenticationCmdlet.cs" />
     <Compile Include="Cmdlets\Common\BasePSCmdlet.cs" />
@@ -100,7 +110,19 @@
     <Compile Include="Cmdlets\Common\GetZoneCmdlet.cs" />
     <Compile Include="Cmdlets\Common\GetZonesCmdlet.cs" />
     <Compile Include="Cmdlets\Common\SetConfigCmdlet.cs" />
+    <Compile Include="Cmdlets\Common\SetZoneCmdlet.cs" />
+    <Compile Include="Providers\Common\BaseNavigationCmdletProvider.cs" />
+    <Compile Include="Providers\Common\CommonDriveInfo.cs" />
+    <Compile Include="Providers\Common\CommonDriveParameters.cs" />
+    <Compile Include="Providers\Common\CommonNavigationProvider.cs" />
+    <Compile Include="Providers\Common\NavigationModel.cs" />
+    <Compile Include="Providers\Common\NavigationResult.cs" />
+    <Compile Include="Providers\ListProviders\BaseListProvider.cs" />
+    <Compile Include="Providers\ListProviders\IListProvider.cs" />
+    <Compile Include="Providers\ListProviders\ServiceProviderList.cs" />
     <Compile Include="Utility\AccountCapabilities.cs" />
+    <Compile Include="Utility\AvailabilityZone.cs" />
+    <Compile Include="Utility\BaseEntity.cs" />
     <Compile Include="Utility\CredentialElement.cs" />
     <Compile Include="Cmdlets\Common\GetServiceProvidersCmdlet.cs" />
     <Compile Include="Cmdlets\Common\NewServiceProviderCmdlet.cs" />
@@ -111,30 +133,35 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ObjectStorage\StorageItemViewModel.cs" />
     <Compile Include="Utility\CredentialManager.cs" />
-    <Compile Include="Providers\ObjectStorage\HPOSDriveInfo.cs" />
-    <Compile Include="Providers\ObjectStorage\HPOSDriveParameters.cs" />
-    <Compile Include="Providers\ObjectStorage\HPOSNavigationProvider.cs" />
+    <Compile Include="Providers\ObjectStorage\ObjectStoragePSDriveInfo.cs" />
+    <Compile Include="Providers\ObjectStorage\ObjectStorageDriveParameters.cs" />
+    <Compile Include="Providers\ObjectStorage\ObjectStorageNavigationProvider.cs" />
     <Compile Include="Utility\Context.cs" />
+    <Compile Include="Utility\DefaultRegistrationManager.cs" />
     <Compile Include="Utility\Enums.cs" />
     <Compile Include="Utility\ExtensionManager.cs" />
+    <Compile Include="Providers\ObjectStorage\ObjectStorageDriveConverter.cs" />
     <Compile Include="Utility\OpenstackCoreRegistrationManager.cs" />
     <Compile Include="Utility\RegistrationManager.cs" />
     <Compile Include="Utility\RegistrationResponse.cs" />
     <Compile Include="Utility\SecureStringHelper.cs" />
     <Compile Include="Utility\ServiceProvider.cs" />
     <Compile Include="Utility\ConfigurationManager.cs" />
+    <Compile Include="Utility\ServiceProviderAttribute.cs" />
     <Compile Include="Utility\Settings.cs" />
     <Compile Include="Utility\StoragePath.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Deployment\NavigationGraph.dgml" />
     <None Include="Deployment\Openstack.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Deployment\DevProfile.ps1" />
     <None Include="Deployment\PostBuild.bat" />
-    <None Include="Deployment\ScratchPad\app.config" />
     <None Include="Deployment\Openstack.config.example">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -148,12 +175,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Deployment\PostBuild.example" />
-    <None Include="Deployment\ScratchPad\PostBuild.targets">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Deployment\ScratchPad\ProCLI.config">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
     <Resource Include="Deployment\powershell.exe.config">
       <SubType>Designer</SubType>
@@ -171,7 +192,6 @@
     <Folder Include="Cmdlets\Security\" />
     <Folder Include="Migrations\" />
     <Folder Include="Providers\BlockStorage\" />
-    <Folder Include="Providers\Common\" />
     <Folder Include="Providers\Compute\" />
     <Folder Include="Providers\Dbaas\" />
     <Folder Include="Providers\Networking\" />
@@ -181,13 +201,11 @@
     <Content Include="Deployment\Aliases.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Deployment\ScratchPad\AnotherTest.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Deployment\ApacheLicense.txt" />
     <Content Include="Deployment\CredentialList.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Deployment\NavigationGraph.txt" />
     <Content Include="Deployment\Openstack.Client.Powershell.dll-Help.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -202,7 +220,7 @@
     <Content Include="Deployment\ScratchPad\ServerData\Server1.xml" />
     <Content Include="Deployment\ScratchPad\ServerData\Servers.xml" />
     <Content Include="License.txt" />
-    <None Include="Deployment\Openstack.psd1">
+    <None Include="Deployment\Openstack-Core.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Deployment\ReleaseNotes.xml">
@@ -212,12 +230,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\openstack-sdk-dotnet\Openstack\Openstack\Openstack.csproj">
-      <Project>{b2c92371-b62b-45a2-adeb-edebefa3a75c}</Project>
-      <Name>Openstack</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--<PropertyGroup>
@@ -232,9 +244,14 @@ Echo Executing Post-Build Scripts
 Echo =====================
 
 
-copy C:\Users\tplummer\Source\Repos\openstack-cli-powershell\Openstack.Client.Powershell\Deployment\*.*   C:\Users\tplummer\Documents\WindowsPowerShell\Modules\Openstack\Openstack-Core
-copy C:\Users\tplummer\Source\Repos\openstack-cli-powershell\Openstack.Client.Powershell\Deployment\DevProfile.ps1  C:\Users\tplummer\Documents\WindowsPowerShell\Microsoft.Powershell_profile.ps1
-copy C:\Users\tplummer\Source\Repos\openstack-cli-powershell\Openstack.Client.Powershell\Deployment\Openstack.config  C:\Users\tplummer\Documents\OS\Openstack.config
+md  C:\Users\tplummer\Documents\WindowsPowerShell
+md  C:\Users\tplummer\Documents\WindowsPowerShellModules
+md  C:\Users\tplummer\Documents\WindowsPowerShell\Modules\Openstack
+md  C:\Users\tplummer\Documents\WindowsPowerShell\Modules\Openstack\Openstack-Core
+
+copy $(ProjectDir)\Deployment\*.*                                 C:\Users\tplummer\Documents\WindowsPowerShell\Modules\Openstack\Openstack-Core
+copy  $(ProjectDir)\Deployment\DevProfile.ps1            C:\Users\tplummer\Documents\WindowsPowerShell\Microsoft.Powershell_profile.ps1
+copy  $(ProjectDir)\Deployment\Openstack.config      C:\Users\tplummer\Documents\OS\Openstack.config
 
 
 
@@ -250,4 +267,9 @@ copy C:\Users\tplummer\Source\Repos\openstack-cli-powershell\Openstack.Client.Po
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
 </Project>

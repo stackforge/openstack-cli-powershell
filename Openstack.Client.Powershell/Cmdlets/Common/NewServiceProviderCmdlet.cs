@@ -26,12 +26,12 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
     public class NewServiceProvidersCmdlet : BasePSCmdlet
     {
 
-        private string _name = "HP21";
+        private string _name = "";
         private bool _isDefault = false;
-        private string _authenticationServiceURI = "https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/tokens";
-        private string _username = "travis.plummer@hp.com";
-        private string _password = "NoRemorseGlock27";
-        private string _defTenantId = "travis.plummer@hp.com";
+        private string _authenticationServiceURI = "";
+        private string _username = "";
+        private string _password = "";
+        private string _defTenantId = "";
         
         #region Parameters
 

@@ -14,13 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ============================================================================ */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenStack.Client.Powershell.Cmdlets.Common;
 using System.Management.Automation;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using System.Linq;
+using Openstack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
@@ -34,13 +32,13 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
 //=========================================================================================
         protected override void ProcessRecord()
         {
-            string configFilePath    = this.ConfigFilePath;
-            XDocument doc            = XDocument.Load(configFilePath);          
-            XElement defaultZoneNode = doc.XPathSelectElement("//AvailabilityZone[@isDefault='True']");
-           
-            Console.WriteLine("");
-            Console.WriteLine("Current Availability Zone is " + defaultZoneNode.Attribute("name").Value);
-            Console.WriteLine("");
+            AvailabilityZone zone = this.Context.CurrentServiceProvider.AvailabilityZones.Where(z => z.IsDefault == true).Single();
+
+            if (zone != null)  {
+                Console.WriteLine("");
+                Console.WriteLine("Current Availability Zone is " + zone.Name);
+                Console.WriteLine("");
+            }
         }
     }
 }
