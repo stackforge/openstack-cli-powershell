@@ -27,7 +27,7 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using System.Management.Automation.Host;
 using System.Threading;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Cmdlets.Common
 {

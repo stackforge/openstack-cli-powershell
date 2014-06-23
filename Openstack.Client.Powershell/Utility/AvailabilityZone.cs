@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Openstack.Client.Powershell.Utility
+namespace OpenStack.Client.Powershell.Utility
 {
     public class AvailabilityZone
     {

@@ -21,7 +21,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using OpenStack.Client.Powershell.Utility;
 using System.Linq;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Providers.Common
 {
@@ -112,13 +112,16 @@ namespace OpenStack.Client.Powershell.Providers.Common
         private void SetZoneColor(ServiceProvider provider)
         {
             // We don't throw a critical exception if this operation fails..
+            try
+            {
+                AvailabilityZone defZone = provider.AvailabilityZones.Where(z => z.IsDefault == true).DefaultIfEmpty(null).FirstOrDefault();
+                if (defZone == null) return;
 
-            AvailabilityZone defZone = provider.AvailabilityZones.Where(z => z.IsDefault == true).DefaultIfEmpty(null).FirstOrDefault();
-            if (defZone == null) return;
-            
-            Console.ForegroundColor            = (ConsoleColor)Enum.Parse(typeof(ConsoleColor),  defZone.ShellForegroundColor);
-            this.Host.UI.RawUI.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor),  defZone.ShellForegroundColor);
-            this.Context.Forecolor             = defZone.ShellForegroundColor;
+                Console.ForegroundColor            = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), defZone.ShellForegroundColor);
+                this.Host.UI.RawUI.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), defZone.ShellForegroundColor);
+                this.Context.Forecolor             = defZone.ShellForegroundColor;
+            }
+            catch (System.Management.Automation.Host.HostException) { }
         }
 //==================================================================================================
 /// <summary>

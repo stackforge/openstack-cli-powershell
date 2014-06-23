@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one. -->
+<package>
+  <metadata>
+    <id>widget-cli-powershell</id>
+    <title>widget-cli-powershell</title>
+    <version>2.0.0</version>
+    <authors>Lateralus</authors>
+    <owners>thatGuy</owners>
+    <summary>Thid package allows Users to manage their Openstack environments from the Powershell command line.</summary>
+    <description>Thid package allows Users to manage their Openstack environments from the Powershell command line.</description>
+    <tags>OpenStack Powershell CLI Windows</tags>
+    <copyright>2014</copyright>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <!--<iconUrl>https://raw.github.com/__CHOCO_PKG_OWNER_REPO__/master/__NAME__/__NAME__.png</iconUrl>-->
+    <!--<dependencies>
+      <dependency id="" version="" />
+    </dependencies>-->
+    <releaseNotes>This first release demonstrates the Mutli-Vendor functionality as well as a Read-onoly version of the ObjectStorage Provider.</releaseNotes>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

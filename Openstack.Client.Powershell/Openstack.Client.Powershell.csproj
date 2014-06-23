@@ -8,7 +8,7 @@
     <ProjectGuid>{32BAC168-2EC8-4074-9E6D-8C13460DCFAD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Openstack.Client.Powershell</RootNamespace>
+    <RootNamespace>OpenStack.Client.Powershell</RootNamespace>
     <AssemblyName>Openstack.Client.Powershell</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -21,7 +21,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\Documents\WindowsPowerShell\Modules\Openstack\Openstack-Core\</OutputPath>
+    <OutputPath>..\..\..\..\Documents\WindowsPowerShell\Modules\Openstack-Core\</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -58,13 +58,13 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AWSSDK, Version=2.0.11.0, Culture=neutral, PublicKeyToken=9f476d3089b52be3, processorArchitecture=MSIL">
+    <Reference Include="AWSSDK, Version=2.1.3.0, Culture=neutral, PublicKeyToken=9f476d3089b52be3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AWSSDK.2.0.11.0\lib\net45\AWSSDK.dll</HintPath>
+      <HintPath>..\packages\AWSSDK.2.1.3.0\lib\net45\AWSSDK.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="OpenStack, Version=0.9.1.0, Culture=neutral, PublicKeyToken=baf191d8aca7391c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -111,7 +111,6 @@
     <Compile Include="Cmdlets\Common\GetZonesCmdlet.cs" />
     <Compile Include="Cmdlets\Common\SetConfigCmdlet.cs" />
     <Compile Include="Cmdlets\Common\SetZoneCmdlet.cs" />
-    <Compile Include="Cmdlets\Common\TokenTestCmdlet.cs" />
     <Compile Include="Providers\Common\BaseNavigationCmdletProvider.cs" />
     <Compile Include="Providers\Common\CommonDriveInfo.cs" />
     <Compile Include="Providers\Common\CommonDriveParameters.cs" />
@@ -134,7 +133,6 @@
     <Compile Include="Utility\Enums.cs" />
     <Compile Include="Utility\ExtensionManager.cs" />
     <Compile Include="Providers\ObjectStorage\ObjectStorageDriveConverter.cs" />
-    <Compile Include="Utility\ExtensionMethods.cs" />
     <Compile Include="Utility\OpenstackCoreRegistrationManager.cs" />
     <Compile Include="Utility\RegistrationManager.cs" />
     <Compile Include="Utility\RegistrationResponse.cs" />
@@ -150,18 +148,17 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Deployment\NavigationGraph.dgml" />
     <None Include="Deployment\Openstack.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Deployment\DevProfile.ps1" />
-    <None Include="Deployment\PostBuild.bat" />
-    <None Include="Deployment\Openstack.config.example">
+    <None Include="Deployment\Examples\PostBuild.bat" />
+    <None Include="Deployment\Examples\Openstack.config.example">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Deployment\DevProfile.ps1.example" />
+    <None Include="Deployment\Examples\DevProfile.ps1.example" />
     <None Include="Deployment\Openstack.format.ps1xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -169,7 +166,9 @@
     <None Include="Deployment\Microsoft.PowerShell_profile.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Deployment\PostBuild.example" />
+    <None Include="Deployment\Examples\PostBuild.example" />
+    <None Include="Deployment\tools\chocolateyInstall.ps1" />
+    <None Include="Deployment\openstack-cli-powershell.nuspec" />
     <None Include="packages.config" />
     <Resource Include="Deployment\powershell.exe.config">
       <SubType>Designer</SubType>
@@ -193,32 +192,23 @@
     <Folder Include="Providers\Security\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Deployment\Aliases.txt">
+    <Content Include="Deployment\Examples\Aliases.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Deployment\ApacheLicense.txt" />
-    <Content Include="Deployment\CredentialList.xml">
+    <Content Include="Deployment\Examples\ApacheLicense.txt" />
+    <Content Include="Deployment\Examples\CredentialList.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Deployment\NavigationGraph.txt" />
     <Content Include="Deployment\Openstack.Client.Powershell.dll-Help.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Deployment\readme.txt" />
-    <Content Include="Deployment\ReleaseManifest.xml" />
-    <Content Include="Deployment\ScratchPad\SecurityGroupData\SecurityGroupTest.xml" />
-    <Content Include="Deployment\ScratchPad\SecurityGroupData\SecurityGroupsTest.xml" />
-    <Content Include="Deployment\ScratchPad\SecurityGroupData\SecurityGroups.xml" />
-    <Content Include="Deployment\ScratchPad\ServerData\Server.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Deployment\ScratchPad\ServerData\Server1.xml" />
-    <Content Include="Deployment\ScratchPad\ServerData\Servers.xml" />
+    <Content Include="Deployment\Examples\readme.txt" />
+    <Content Include="Deployment\Examples\ReleaseManifest.xml" />
     <Content Include="License.txt" />
     <None Include="Deployment\Openstack-Core.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Deployment\ReleaseNotes.xml">
+    <None Include="Deployment\Examples\ReleaseNotes.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
@@ -240,12 +230,11 @@ Echo =====================
 
 md  %25USERPROFILE%25\Documents\WindowsPowerShell
 md  %25USERPROFILE%25\Documents\WindowsPowerShell\Modules
-md %25USERPROFILE%25\Documents\WindowsPowerShell\Modules\Openstack
-md  %25USERPROFILE%25\Documents\WindowsPowerShell\Modules\Openstack\Openstack-Core
+md  %25USERPROFILE%25\Documents\WindowsPowerShell\Modules\Openstack-Core
 md %25USERPROFILE%25\Documents\OS
 md $(ProjectDir)bin\debug
 
-copy $(ProjectDir)\Deployment\*.*                                 %25USERPROFILE%25\Documents\WindowsPowerShell\Modules\Openstack\Openstack-Core
+copy $(ProjectDir)\Deployment\*.*                                 %25USERPROFILE%25\Documents\WindowsPowerShell\Modules\Openstack-Core
 copy  $(ProjectDir)\Deployment\DevProfile.ps1            %25USERPROFILE%25\Documents\WindowsPowerShell\Microsoft.Powershell_profile.ps1
 copy  $(ProjectDir)\Deployment\Openstack.config     %25USERPROFILE%25\Documents\OS\Openstack.config
 
@@ -259,8 +248,7 @@ echo copy C:\Users\tplummer\Source\Repos\FixIt\openstack-cli-powershell\Openstac
 
 Echo The statement below is causing symbol mismatches when attaching the debugger remotely. For now, you should point this projects output folder 
 Echo  to the correct runtime location. That is C:\Users\username\Documents\WindowsPowerShell\Modules\Openstack\Openstack-Core
-Echo ' copy $(ProjectDir)bin\debug\*.*                                      %25USERPROFILE%25\Documents\WindowsPowershell\Modules\Openstack\openstack-core
-
+Echo ' copy $(ProjectDir)bin\debug\*.*                                      %25USERPROFILE%25\Documents\WindowsPowershell\Modules\openstack-core
 
 
 

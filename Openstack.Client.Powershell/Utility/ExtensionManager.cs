@@ -15,31 +15,61 @@ using System;
 using System.Management.Automation;
 using System.Reflection;
 using System.Security.Policy;
-using OpenStack.Client.Powershell.Utility;
 using System.Linq;
 using OpenStack.Identity;
 using System.Threading;
-using Openstack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Utility
 {
+    public class LoadResult
+    {
+        public LoadResult(IOpenStackClient client, Context context)
+        {
+            CoreClient = client;
+            Context = context;
+        }
+        public IOpenStackClient CoreClient;
+        public Context Context;
+    }
+
     public class ExtensionManager
     {
         private SessionState _session;
         private Context _context;
 
         #region Properties
+//==================================================================================================
+/// <summary>
+/// 
+/// </summary>
+//==================================================================================================
         public Context Context
         {
             get { return _context; }
             set { _context = value; }
         }
+//==================================================================================================
+/// <summary>
+/// 
+/// </summary>
+//==================================================================================================
         public SessionState Session
         {
             get { return _session; }
             set { _session = value; }
         }
         #endregion
+//==================================================================================================
+/// <summary>
+/// 
+/// </summary>
+/// <param name="session"></param>
+/// <param name="context"></param>
+//==================================================================================================
+        public ExtensionManager(Context context)
+        {
+            _context = context;
+        }
 //==================================================================================================
 /// <summary>
 /// 
@@ -79,7 +109,7 @@ namespace OpenStack.Client.Powershell.Utility
 /// <param name="context"></param>
 /// <param name="client"></param>
 //==================================================================================================
-        private void SetSessionState(IOpenStackCredential credential, IOpenStackClient client, ServiceProvider provider)
+        private LoadResult SetSessionState(IOpenStackCredential credential, IOpenStackClient client, ServiceProvider provider)
         {
             // Setup the environment based on what came back from Auth..
 
@@ -90,9 +120,13 @@ namespace OpenStack.Client.Powershell.Utility
             context.Version                = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             context.CurrentServiceProvider = provider;
             context.CurrentRegion          = provider.AvailabilityZones.Where(z => z.IsDefault == true).Single().Name;
-          
-            this.Session.PSVariable.Set(new PSVariable("Context", context));
-            this.Session.PSVariable.Set(new PSVariable("CoreClient", client));
+
+            if (this.Session != null)
+            {
+                this.Session.PSVariable.Set(new PSVariable("Context", context));
+                this.Session.PSVariable.Set(new PSVariable("CoreClient", client));
+            }
+            return new LoadResult(client, context);
         }
 //==================================================================================================
 /// <summary>
@@ -138,7 +172,7 @@ namespace OpenStack.Client.Powershell.Utility
 /// </summary>
 /// <returns></returns>
 //==================================================================================================
-        public void LoadCore(ServiceProvider provider)
+        public LoadResult LoadCore(ServiceProvider provider)
         {            
             OpenstackCoreRegistrationManager manager = new OpenstackCoreRegistrationManager();
             RegistrationResponse response            = manager.Register(provider);
@@ -147,7 +181,8 @@ namespace OpenStack.Client.Powershell.Utility
 
             CancellationTokenSource source = new CancellationTokenSource();
             CancellationToken token = source.Token;
-            this.Session.PSVariable.Set(new PSVariable("CancellationTokenSource", source));
+            if (this.Session != null)
+               this.Session.PSVariable.Set(new PSVariable("CancellationTokenSource", source));
 
             // Connect to the Service Provider..           
        
@@ -155,10 +190,11 @@ namespace OpenStack.Client.Powershell.Utility
             var connectTask = client.Connect();
             connectTask.Wait();
 
-            this.SetSessionState(response.Credentials, client, provider);
+            LoadResult result = this.SetSessionState(response.Credentials, client, provider);
 
             ConfigurationManager configManager = new ConfigurationManager();
             configManager.WriteServiceProvider(response.Provider, true);
+            return result;
         }
 //==================================================================================================
 /// <summary>

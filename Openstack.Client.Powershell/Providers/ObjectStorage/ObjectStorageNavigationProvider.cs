@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using OpenStack.Client.Powershell.Providers.ObjectStorage;
 using System.Diagnostics.Contracts;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Providers.Storage 
 {
@@ -177,7 +177,7 @@ namespace OpenStack.Client.Powershell.Providers.Storage
 //==================================================================================================
         protected override System.Collections.ObjectModel.Collection<PSDriveInfo> InitializeDefaultDrives()
         {
-            Thread.Sleep(new TimeSpan(0, 0, 0, 5, 0));
+            //Thread.Sleep(new TimeSpan(0, 0, 0, 5, 0));
 
             this.InitializeSession();
 
@@ -522,7 +522,7 @@ namespace OpenStack.Client.Powershell.Providers.Storage
                     storagePath = new StoragePath(this.StorageServiceURL, this.Drive.Name, path.Substring(1) + "/");
                 }
 
-                IStorageServiceClient storageService = this.CoreClient.CreateServiceClient<IStorageServiceClient>(); 
+                IStorageServiceClient storageService = this.CreateServiceClient<IStorageServiceClient>(CoreServices.ObjectStorage); 
                 Task<StorageObject> getStorageObjectTask = storageService.GetStorageObject(storagePath.Volume, storagePath.ResourcePath);                            //(storagePath.AbsoluteURI);
                 getStorageObjectTask.Wait();
                 StorageObject sObject = getStorageObjectTask.Result;

@@ -1,0 +1,16 @@
+﻿<ServiceProvider name="AcmeInc" isDefault="false">
+  <add key="AuthenticationServiceURI" value="https://region-a.geo-1.identity.hpcloudsvc.com:35357/v2.0/" displayName="Authentication Service URI" helpText ="" isMandatory="True"/>
+  <add key="Username"                 value="" displayName="User name" helpText ="" isMandatory="True"/>
+  <add key="Password"                 value="" displayName="Password" helpText ="" isMandatory="True" />
+  <add key="DefaultTenantId"          value="" displayName="Default Tenant Id" helpText ="" isMandatory="True"/>
+  <AvailabilityZones>
+    <AvailabilityZone id="1" isDefault="True" name="Acmeregion-a.geo-1" shellForegroundColor="Green" />
+    <AvailabilityZone id="2" isDefault="False" name="Acmeregion-b.geo-1" shellForegroundColor="Green" />
+  </AvailabilityZones>
+  <ServiceMaps>
+    <ServiceMap source="ObjectStorage"   target="Object Storage"/>
+    <ServiceMap source="ImageManagement" target="Image Management"/>
+    <ServiceMap source="BlockStorage"    target="Block Storage"/>
+    <ServiceMap source="Compute"         target="Compute"/>
+  </ServiceMaps>
+</ServiceProvider>

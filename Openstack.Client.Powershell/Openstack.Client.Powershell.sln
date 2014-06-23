@@ -1,12 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D129B468-4E23-4226-AA0E-AE02BB697D9A}"
-	ProjectSection(SolutionItems) = preProject
-		HPCloud.Client.Powershell.vsmdi = HPCloud.Client.Powershell.vsmdi
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Openstack.Client.Powershell", "Openstack.Client.Powershell.csproj", "{32BAC168-2EC8-4074-9E6D-8C13460DCFAD}"
 EndProject
@@ -19,6 +16,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Openstack.Common", "..\..\API\Openstack.Common\Openstack.Common.csproj", "{F6AF0191-F236-4C26-8C93-30D5F4D8000F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Openstack.Objects.Test", "..\..\API\Openstack.Objects.Test\Openstack.Objects.Test.csproj", "{E90D4392-6748-4405-9F99-2D5FBB09DFC8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{58823660-23CD-44FD-A588-2592A2932EC3}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

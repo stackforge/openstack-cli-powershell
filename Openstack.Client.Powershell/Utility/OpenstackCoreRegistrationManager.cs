@@ -19,7 +19,7 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 using OpenStack.Client.Powershell.Utility;
 using OpenStack.Identity;
 

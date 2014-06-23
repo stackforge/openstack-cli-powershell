@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Openstack.Client.Powershell.Providers.Common
+namespace OpenStack.Client.Powershell.Providers.Common
 {
     public class CommonDriveParameters
     {

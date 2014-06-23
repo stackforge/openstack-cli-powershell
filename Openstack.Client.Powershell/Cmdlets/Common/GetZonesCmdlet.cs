@@ -21,7 +21,7 @@ using OpenStack.Client.Powershell.Cmdlets.Common;
 using System.Management.Automation;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
