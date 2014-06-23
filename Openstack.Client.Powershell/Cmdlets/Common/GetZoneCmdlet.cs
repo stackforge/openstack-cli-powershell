@@ -18,7 +18,8 @@ using System.Management.Automation;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Linq;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
@@ -31,8 +32,14 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
 /// </summary>
 //=========================================================================================
         protected override void ProcessRecord()
-        {
-            AvailabilityZone zone = this.Context.CurrentServiceProvider.AvailabilityZones.Where(z => z.IsDefault == true).Single();
+        {                             
+            
+            string path = @"C:\Users\plummert\Documents\WindowsPowerShell\Modules\AcmeInc\ServiceProvider.xml";
+
+           ConfigurationManager manager = new ConfigurationManager();
+           manager.WriteServiceProvider(path);
+           
+        AvailabilityZone zone = this.Context.CurrentServiceProvider.AvailabilityZones.Where(z => z.IsDefault == true).Single();
 
             if (zone != null)  {
                 Console.WriteLine("");

@@ -15,11 +15,9 @@ using System;
 using System.Management.Automation;
 using System.Reflection;
 using System.Security.Policy;
-using OpenStack.Client.Powershell.Utility;
 using System.Linq;
 using OpenStack.Identity;
 using System.Threading;
-using Openstack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Utility
 {
@@ -29,11 +27,21 @@ namespace OpenStack.Client.Powershell.Utility
         private Context _context;
 
         #region Properties
+//==================================================================================================
+/// <summary>
+/// 
+/// </summary>
+//==================================================================================================
         public Context Context
         {
             get { return _context; }
             set { _context = value; }
         }
+//==================================================================================================
+/// <summary>
+/// 
+/// </summary>
+//==================================================================================================
         public SessionState Session
         {
             get { return _session; }

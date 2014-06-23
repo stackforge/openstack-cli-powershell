@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using OpenStack.Client.Powershell.Providers.ObjectStorage;
 using System.Diagnostics.Contracts;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Providers.Storage 
 {
@@ -177,7 +177,7 @@ namespace OpenStack.Client.Powershell.Providers.Storage
 //==================================================================================================
         protected override System.Collections.ObjectModel.Collection<PSDriveInfo> InitializeDefaultDrives()
         {
-            Thread.Sleep(new TimeSpan(0, 0, 0, 5, 0));
+            //Thread.Sleep(new TimeSpan(0, 0, 0, 5, 0));
 
             this.InitializeSession();
 

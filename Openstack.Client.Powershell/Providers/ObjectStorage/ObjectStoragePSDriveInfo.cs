@@ -21,7 +21,7 @@ using System;
 using System.IO;
 using System.Linq;
 using OpenStack.Storage;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 
 
 namespace OpenStack.Client.Powershell.Providers.Storage

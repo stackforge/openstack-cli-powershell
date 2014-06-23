@@ -21,7 +21,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using OpenStack.Client.Powershell.Utility;
 using System.Linq;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 
 namespace OpenStack.Client.Powershell.Providers.Common
 {

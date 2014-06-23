@@ -16,9 +16,9 @@ limitations under the License.
 using System.Collections;
 using System.Collections.Generic;
 using System.Management.Automation;
-using Openstack.Client.Powershell.Providers.Common;
+using OpenStack.Client.Powershell.Providers.Common;
 
-namespace Openstack.Client.Powershell.Providers.Common
+namespace OpenStack.Client.Powershell.Providers.Common
 {
     public class CommonDriveInfo : PSDriveInfo
     {

@@ -20,7 +20,7 @@ using System.Xml.XPath;
 using OpenStack.Client.Powershell.Cmdlets.Common;
 using OpenStack.Client.Powershell.Utility;
 
-namespace Openstack.Client.Powershell.Cmdlets.Common
+namespace OpenStack.Client.Powershell.Cmdlets.Common
 {
     [Cmdlet("Set", "Zone", SupportsShouldProcess = true)]
     public class SetZoneCmdlet : BasePSCmdlet

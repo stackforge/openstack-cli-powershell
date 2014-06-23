@@ -26,7 +26,6 @@ using System.Diagnostics.Contracts;
 
 namespace OpenStack.Client.Powershell.Utility
 {   
-
     public class ServiceProviderInfo
     {
         public string Name;

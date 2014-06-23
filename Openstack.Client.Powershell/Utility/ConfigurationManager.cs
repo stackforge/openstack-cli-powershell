@@ -20,7 +20,7 @@ using System.Xml.Linq;
 using System.Collections;
 using System.IO;
 using System.Xml.XPath;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 using System.Xml.Schema;
 using System.Xml;
 
@@ -148,6 +148,7 @@ namespace OpenStack.Client.Powershell.Utility
         {   
             ValidationResult result = new ValidationResult();
 
+            #region XSD Approach
             // First we check the structural integrity of the document via XSD..
 
             //string xsdMarkup = this.GetSchema();
@@ -159,7 +160,8 @@ namespace OpenStack.Client.Powershell.Utility
             //    result.Errors.Add(e.Message);
             //    result.HasErrors = true;
             //});
-            
+            #endregion
+
             // Next, ensure that a default Service Provider exist..            
             
             var serviceProviders    = this.Document.Descendants("ServiceProvider");
@@ -201,8 +203,7 @@ namespace OpenStack.Client.Powershell.Utility
                     result.Errors.Add("Please ensure that all Service Providers have a unique name assigned to them.");
                     return result;
                 }
-            }             
-
+            }          
             return result;           
         }
 //=========================================================================================
@@ -443,6 +444,27 @@ namespace OpenStack.Client.Powershell.Utility
                 serviceProviderNode.Attribute("isDefault").SetValue("false");
             }
             catch (Exception) { }
+        }
+//=========================================================================================
+/// <summary>
+/// Used by Extension Authors to register their Service Provider info. The path should point
+/// to the ServiceProvider.xml definition file,.
+/// </summary>
+//=========================================================================================
+        public void WriteServiceProvider(string serviceProviderPath)
+        {
+            // Load up the Primary Config file..
+                     
+            this.Load(this.GetFullConfigPath());
+            XDocument serviceProvider = XDocument.Load(serviceProviderPath);
+
+            // Validate the ServiceProvider.xml definition file. If it passes, add it to the config file.
+
+            if (this.ValidateDocument(serviceProvider).Errors.Count() == 0)  {
+                XElement identityServices = this.Document.Descendants("IdentityServices").FirstOrDefault();
+                identityServices.Add(serviceProvider.FirstNode);
+                this.Document.Save(this.GetFullConfigPath());
+            }
         }
 //=========================================================================================
 /// <summary>

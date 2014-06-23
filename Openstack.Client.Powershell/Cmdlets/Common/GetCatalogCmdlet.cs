@@ -107,7 +107,7 @@ namespace OpenStack.Client.Powershell.Cmdlets.Common
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Name          : " + service.Name);
             Console.WriteLine("Type          : " + service.Type);
-           // Console.WriteLine("Provider Name : " + service.ProviderName);
+          
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("");
             Console.WriteLine("Associated Endpoints");

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
-using Openstack.Client.Powershell.Utility;
+using OpenStack.Client.Powershell.Utility;
 using OpenStack;
 using OpenStack.Client.Powershell.Providers.Storage;
 using OpenStack.Client.Powershell.Utility;
